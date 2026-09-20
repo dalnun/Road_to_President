@@ -3,7 +3,28 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>대통령 되기 시뮬레이터</title>
+<title></title>
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   게임 이름은 여기 한 곳에만 있다.
+   이름을 바꿀 때는 아래 name 한 줄만 고치면 된다. 그러면
+   브라우저 탭 제목, 홈 화면의 큰 제목, 엔딩, 기록 내보내기 파일 이름이
+   모두 함께 바뀐다.
+   ※ 저장 열쇠(CONFIG.saveKeys)는 여기에 딸려 있지 않다. 그쪽을 바꾸면
+     지금까지 모아 둔 엔딩 도감과 최고 점수가 사라지므로 건드리지 않는다.
+   ══════════════════════════════════════════════════════════════════════════ */
+const GAME = (function(){
+  var name = '대통령까지 만 걸음';        /* ← 바꿀 때 고치는 곳은 여기 한 줄 */
+  return {
+    name:name,
+    /* 홈 화면 큰 제목 — 첫 띄어쓰기 자리에서 줄을 바꾼다 */
+    titleHTML:name.replace(' ', '<br>'),
+    /* 내보내기 파일 이름 — 띄어쓰기를 뺀 꼴 */
+    fileName:name.replace(/\s+/g, '')
+  };
+})();
+document.title = GAME.name;
+</script>
 <style>
 :root{
   --indigo:#534ab7;      /* 포인트 색 */
@@ -996,7 +1017,8 @@ html{scroll-behavior:smooth}
 <script>
 "use strict";
 /* ============================================================================
-   대통령 되기 시뮬레이터 — 턴 0(고교 16~19세) ~ 턴 7(50~55세), 그 뒤 은퇴 후의 삶
+   대통령까지 만 걸음 — 턴 0(고교 16~19세) ~ 턴 7(50~55세), 그 뒤 은퇴 후의 삶
+   (게임 이름은 파일 맨 위 GAME 상수 한 곳에서만 정한다)
    ----------------------------------------------------------------------------
    [코드를 몰라도 고치는 법]
    · 숫자만 바꾸고 싶다 → [1] CONFIG 만 보세요.
@@ -7721,7 +7743,7 @@ function writeSave(score, key, title, group, last5, hallEntry){
    불러올 때는 덮어쓰지 않고 합친다 — 지금 가진 기록이 사라지지 않게.
    저장소를 못 써도 게임은 그대로 돌아간다.
    ══════════════════════════════════════════════════════════════════════════ */
-const SAVE_FILE = { ver:1, game:'대통령 되기 시뮬레이터' };
+const SAVE_FILE = { ver:1, game:GAME.name };
 /* 설정은 saveKeys 중 도감·점수를 뺀 나머지 (안내를 봤는지 같은 것) */
 function settingKeys(){
   return ['feedTip','tips'].filter(function(k){ return CONFIG.saveKeys[k]; });
@@ -7743,7 +7765,7 @@ function downloadSave(){
     var url = URL.createObjectURL(blob);
     var a = document.createElement('a');
     a.href = url;
-    a.download = '대통령되기_기록_' + data.savedAt + '.json';
+    a.download = GAME.fileName + '_기록_' + data.savedAt + '.json';
     document.body.appendChild(a); a.click(); document.body.removeChild(a);
     setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} }, 1000);
     return { ok:true, count:Object.keys(data.book).length, hall:data.hall.length };
@@ -11131,7 +11153,8 @@ function silhouetteMark(){
    글은 모두 여기 데이터로 모아 둔다.
    ══════════════════════════════════════════════════════════════════════════ */
 const TITLE_TEXT = {
-  name:'대통령 되기<br>시뮬레이터',
+  /* 게임 이름은 GAME 한 곳에서만 가져온다 (파일 맨 위) */
+  name:GAME.titleHTML,
   intro:'당신도 대통령이 될 수 있습니다.<br>열일곱의 교실에서 시작해, 대통령의 자리까지'
 };
 /* 7차 A-2. 홈 화면의 공문서 말투 */
