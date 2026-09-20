@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8">
@@ -16,17 +16,213 @@
   --card:#ffffff;
   --up:#4338a8;          /* 상승 표시색 (기호 ▲ +도 함께 씀) */
   --down:#a02c5c;        /* 하락 표시색 (기호 ▼ -도 함께 씀) */
+  /* ══ 7차 A-1. 화면마다 갈아입는 옷 ══════════════════════════════════════
+     카드·버튼·글자를 그리는 규칙은 아래에 딱 한 벌만 둔다. 화면이 달라질 때
+     바뀌는 것은 이 변수들뿐이라, 한 화면의 옷을 고쳐도 다른 화면은 그대로다. */
+  --soft:#f7f8fd;        /* 카드 안의 연한 면 (쪽지, 목록 줄) */
+  --track:#dfe1ec;       /* 막대의 빈 부분 */
+  --kicker:var(--indigo);/* 작은 머리글자 색 */
+  --upsoft:#eeecfa;      /* ▲ 알약 배경 */
+  --downsoft:#fbecf2;    /* ▼ 알약 배경 */
+  --radius:18px;         /* 카드 모서리 */
+  --cardline:var(--line);/* 카드 테두리 */
+  --hudbg:#eef0f7;       /* 위쪽 띠 배경 */
+  --paper:none;          /* 바탕 질감 */
+  --edge:transparent;    /* 문서 가장자리 선 */
+  --band:#0e1020;        /* 자막 띠 배경 */
+  --bandfg:#ffffff;      /* 자막 띠 글자 */
+  /* 글꼴은 두 가지. 기기에 있는 것만 쓰고 웹 글꼴은 불러오지 않는다. */
+  --font-body:"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  --font-doc:Batang,"바탕",AppleMyungjo,"Times New Roman",serif;
+  --titlespace:-.3px;    /* 제목 자간 */
 }
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 A-2~A-8 — 화면별 옷
+   밝은 옷: 홈(공문서) · 공책 · 진로별 공간
+   어두운 옷: 방송(선거·경선) · 스튜디오(토론) · 긴급(위기) · 기념관(엔딩)
+   평소 화면을 밝게 둬야 선거의 긴장감이 산다.
+   ══════════════════════════════════════════════════════════════════════════ */
+/* ── A-2. 홈 (공문서) ── */
+body[data-skin="home"]{
+  --bg:#f6f4ec; --card:#fffdf7; --line:#e0dac8; --cardline:#cdc5ab;
+  --soft:#f4f1e3; --kicker:#6f6752; --track:#e2dcc9;
+  --radius:5px; --titlespace:-1.4px; --edge:#e3ddca;
+  --paper:repeating-linear-gradient(0deg,transparent 0 27px,rgba(122,112,80,.05) 27px 28px);
+}
+/* ── A-3. 어린 시절과 고교 (공책) ── */
+body[data-skin="note"]{
+  --bg:#f4f6fb; --card:#fefeff; --line:#dfe4f1; --cardline:#dbe1f0;
+  --soft:#f3f6fd; --radius:9px;
+}
+/* ── A-4. 20~35세 (진로별 공간) ── */
+body[data-skin="career"]{ --bg:#f1f2f8; --radius:16px; }
+/* ── A-5. 선거와 경선 (방송 자막) ── */
+body[data-skin="broadcast"]{
+  --bg:#1d2136; --card:#2a3050; --line:#3e4569; --cardline:#3e4569;
+  --ink:#eceefa; --sub:#a8afcd; --soft:#242a44; --track:#3a4166; --hudbg:#232845;
+  --indigo:#6e64da; --indigo-d:#5d53c9; --indigo-l:#353c62;
+  --kicker:#b2b8ee; --up:#9ba4ea; --down:#e27fa3;
+  --upsoft:#2f3659; --downsoft:#452c3e; --radius:12px;
+}
+/* ── A-6. 토론 (스튜디오) ── */
+body[data-skin="studio"]{
+  --bg:#191d31; --card:#262c4a; --line:#3b4265; --cardline:#3b4265;
+  --ink:#eceefa; --sub:#a8afcd; --soft:#20263e; --track:#373e62; --hudbg:#1f2440;
+  --indigo:#6e64da; --indigo-d:#5d53c9; --indigo-l:#323960;
+  --kicker:#b2b8ee; --up:#9ba4ea; --down:#e27fa3;
+  --upsoft:#2f3659; --downsoft:#452c3e; --radius:12px;
+}
+/* ── A-7. 위기 (긴급 보도) ── */
+body[data-skin="urgent"]{
+  --bg:#232536; --card:#2e3150; --line:#434869; --cardline:#434869;
+  --ink:#eceefa; --sub:#abb0cc; --soft:#272a45; --track:#3e4366; --hudbg:#272a48;
+  --indigo:#6e64da; --indigo-d:#5d53c9; --indigo-l:#373c63;
+  --kicker:#b2b8ee; --up:#9ba4ea; --down:#e88aa9;
+  --upsoft:#2f3659; --downsoft:#47303f; --radius:12px; --band:#8e2650;
+}
+/* ── A-8. 엔딩 (기념관) — 기존 설계(5차 C-2)를 그대로 쓴다 ── */
+body[data-skin="hall"]{
+  --bg:#171a2b; --card:#222741; --line:#333a5c; --cardline:#333a5c;
+  --ink:#e8eaf4; --sub:#a6adcd; --soft:#1e2338; --track:#333a5c; --hudbg:#1d2136;
+  --indigo:#6e64da; --indigo-d:#5d53c9; --indigo-l:#313858;
+  --kicker:#9aa3cc; --up:#9ba4ea; --down:#e27fa3;
+  --upsoft:#2b3157; --downsoft:#43293b;
+}
+/* 화면이 바뀔 때 0.3초 (움직임 줄이기면 건너뛴다 — skinOf 쪽에서도 막는다) */
+@keyframes skinIn{ from{opacity:0;transform:translateY(7px)} to{opacity:1;transform:none} }
+#app.skinswap{animation:skinIn .3s ease both}
+@media (prefers-reduced-motion: reduce){ #app.skinswap{animation:none} }
+
+/* ── A-2. 홈을 공문서처럼 ── */
+.doccard{position:relative;padding:20px 18px 18px}
+.doccard::after{content:'';position:absolute;inset:5px;border:1px solid var(--line);
+  border-radius:2px;pointer-events:none}
+.docno{font-family:var(--font-doc);font-size:11.5px;letter-spacing:3px;color:var(--kicker);
+  border-bottom:1px solid var(--line);padding-bottom:7px;margin-bottom:12px}
+.docno b{float:right;font-weight:400;letter-spacing:1px}
+body[data-skin="home"] .bigtitle{font-family:var(--font-doc);font-weight:700;font-size:30px}
+.docline{font-size:12.5px;color:var(--sub);border-top:1px solid var(--line);
+  margin-top:14px;padding-top:9px;display:flex;justify-content:space-between;gap:8px}
+/* 결재란처럼 네모 칸을 나란히 */
+.approve{display:flex;margin-top:14px;border:1.5px solid var(--cardline);border-radius:3px;overflow:hidden}
+.approve button{flex:1;min-width:0;background:transparent;border:0;border-left:1px solid var(--line);
+  padding:11px 3px 10px;font:inherit;color:var(--ink);cursor:pointer;text-align:center}
+.approve button:first-child{border-left:0}
+.approve button:hover{background:var(--soft)}
+.approve .al{display:block;font-size:9.5px;letter-spacing:1.5px;color:var(--sub);margin-bottom:4px}
+.approve .av{display:block;font-size:13.5px;font-weight:800;letter-spacing:-.6px;word-break:keep-all}
+/* 도장 자국 — 엔딩을 볼수록 하나씩 늘어난다 */
+.stamps{display:flex;flex-wrap:wrap;gap:5px;justify-content:flex-end;margin-top:12px;min-height:26px}
+.stamps .sm{width:26px;height:26px;border:1.5px solid var(--kicker);border-radius:50%;
+  color:var(--kicker);font-family:var(--font-doc);font-size:12px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;opacity:.72;transform:rotate(-7deg)}
+.stamps .sm:nth-child(2n){transform:rotate(6deg)}
+.stamps .sm:nth-child(3n){transform:rotate(-2deg)}
+
+/* ── A-3. 어린 시절과 고교를 공책처럼 ── */
+body[data-skin="note"] .card{
+  background-image:repeating-linear-gradient(0deg,transparent 0 25px,var(--line) 25px 26px);
+  background-position:0 10px;
+  border-left:2.5px solid #cdc7e4;   /* 왼쪽 세로 여백선 */
+}
+body[data-skin="note"] .card h2,
+body[data-skin="note"] .card h3{
+  display:inline-block;border-bottom:2px solid #b9b3d8;padding-bottom:1px;margin-bottom:6px;
+}
+/* 선택지는 네모 칸에 체크하는 모양 */
+body[data-skin="note"] .choice .t::before{
+  content:'☐';margin-right:7px;font-weight:400;color:var(--sub);
+}
+body[data-skin="note"] .picked .pv::before{
+  content:'☑';margin-right:6px;color:var(--kicker);
+}
+
+/* ── 7차 B-1. 한 화면에서 동시에 고르는 선택지 ── */
+.choice.multi.on{border-color:var(--indigo);border-width:2.5px;background:var(--indigo-l)}
+.choice.multi .pickmark{
+  float:right;font-size:11px;font-weight:800;color:#fff;background:var(--indigo);
+  border-radius:999px;padding:1px 9px;margin-left:8px;
+}
+.choice.multi.full{opacity:.5}
+/* 공책 옷에서는 체크칸이 채워진다 */
+body[data-skin="note"] .choice.multi.on .t::before{content:'☑';color:var(--indigo)}
+
+/* ── 7차 C-1. 별과 체급을 한 덩어리로 ── */
+.starbox{border:1.5px solid var(--line);border-radius:14px;padding:11px 13px;margin-top:8px;background:var(--soft)}
+.starbox .sbt{display:flex;align-items:baseline;gap:9px}
+.starbox .sbt b{font-size:17px;letter-spacing:var(--titlespace)}
+.starbox .sbt .stars{margin-left:auto;font-size:15px;letter-spacing:2px;color:var(--kicker)}
+.starbox .sbn{font-size:12.5px;color:var(--sub);margin-top:3px}
+.starbox .steps{list-style:none;margin:9px 0 0;padding:0;display:grid;gap:3px}
+.starbox .steps li{font-size:12.5px;color:var(--sub);display:flex;gap:7px;align-items:flex-start}
+.starbox .steps li.got{color:var(--ink);font-weight:700}
+.starbox .steps .sm{flex:none;color:var(--kicker);width:14px}
+
+/* ── A-4. 시기를 알려 주는 머리말 ── */
+.turnhead{
+  display:flex;align-items:center;gap:8px;margin:12px 2px 0;font-size:13px;color:var(--sub);
+}
+.turnhead .th{flex:none;font-size:10.5px;font-weight:800;letter-spacing:1px;color:var(--kicker);
+  border:1px solid var(--kicker);border-radius:999px;padding:1px 8px}
+.turnhead .tl{flex:1;min-width:0;word-break:keep-all}
+
+/* ── A-5 · A-6. 방송 자막 띠 (선거 · 경선 · 토론) ── */
+body[data-skin="broadcast"] .evcard>.kicker,
+body[data-skin="studio"] .evcard>.kicker,
+body[data-skin="urgent"] .crisiscard>.kicker{
+  display:block;background:var(--band);color:var(--bandfg);
+  margin:-16px -16px 11px;padding:9px 16px;
+  border-radius:var(--radius) var(--radius) 0 0;
+  font-size:12.5px;font-weight:800;letter-spacing:1.5px;
+  animation:bandUp .3s cubic-bezier(.2,.9,.3,1) both;
+}
+@keyframes bandUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){
+  body[data-skin="broadcast"] .evcard>.kicker,
+  body[data-skin="studio"] .evcard>.kicker,
+  body[data-skin="urgent"] .crisiscard>.kicker{animation:none}
+}
+/* 어두운 화면에서는 그림 가장자리를 어둡게 눌러 무대처럼 보이게 한다 */
+body[data-skin="broadcast"] .artbox::after,
+body[data-skin="studio"] .artbox::after,
+body[data-skin="urgent"] .artbox::after{
+  content:'';position:absolute;inset:0;pointer-events:none;z-index:2;
+  background:radial-gradient(118% 88% at 50% 42%,rgba(12,14,28,0) 46%,rgba(12,14,28,.58) 100%);
+}
+/* ── A-6. 토론 선택지는 큐카드 모양 ── */
+body[data-skin="studio"] .choice{
+  border-radius:3px 3px 13px 13px;border-top:4px solid var(--indigo);
+  box-shadow:0 3px 0 rgba(0,0,0,.28);
+}
+/* ── A-7. 위기는 화면 위 가로줄 띠로 평소와 확실히 다르게 ── */
+.ubar{
+  display:flex;align-items:center;gap:9px;margin:12px 0 -2px;
+  font-size:11.5px;font-weight:800;letter-spacing:2px;
+}
+/* 글자는 꽉 찬 딱지 안에 둔다 — 뒤 배경이 밝든 어둡든 똑같이 읽힌다 */
+.ubar span{flex:none;background:var(--band);color:var(--bandfg);border-radius:4px;padding:2px 9px}
+.ubar::after{
+  content:'';flex:1;height:8px;border-radius:2px;
+  background:repeating-linear-gradient(135deg,var(--down) 0 7px,transparent 7px 14px);
+  opacity:.55;
+}
+body[data-skin="urgent"] .crisiscard{border-width:2.5px}
+body[data-skin="urgent"] .crisiscard .choice{border-width:2.5px}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
-  background:var(--bg); color:var(--ink);
+  background-color:var(--bg); background-image:var(--paper); color:var(--ink);
   overflow-x:hidden;   /* 신문이 날아드는 동안 잠깐 생기던 가로 스크롤을 막는다 */
-  font-family:"Apple SD Gothic Neo","Malgun Gothic","맑은 고딕",system-ui,sans-serif;
+  font-family:var(--font-body);
   font-size:15px; line-height:1.6;
+  /* 바탕색만 천천히 바꾼다. 글자색까지 함께 바꾸면 바뀌는 0.3초 동안
+     어두운 글자가 어두운 바탕에 겹쳐 잠깐 읽히지 않는다. */
+  transition:background-color .3s ease;
 }
+@media (prefers-reduced-motion: reduce){ body{transition:none} }
 /* 아래 고정 탭이 본문을 가리지 않도록 그만큼 자리를 비워 둔다 (6차 A-3) */
-#app{max-width:480px;margin:0 auto;padding:0 12px 40px;min-height:100vh}
+#app{max-width:480px;margin:0 auto;padding:0 12px 40px;min-height:100vh;
+  border-left:1px solid var(--edge);border-right:1px solid var(--edge)}
 body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
 /* ── 6차 A-3. 화면 아래 고정 탭 ── */
 .tabbar{
@@ -42,7 +238,7 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
   color:var(--sub);font:inherit;border-radius:10px;
 }
 .tbtn .tn{font-size:10px;font-weight:700;letter-spacing:-.4px;white-space:nowrap}
-.tbtn.on{color:var(--indigo);background:var(--indigo-l)}
+.tbtn.on{color:var(--kicker);background:var(--indigo-l)}
 .tbtn.on .tn{font-weight:800}
 .tbadge{
   position:absolute;top:2px;right:calc(50% - 22px);min-width:16px;height:16px;padding:0 4px;
@@ -50,9 +246,9 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
   font-size:10px;font-weight:800;line-height:13px;text-align:center;
 }
 .tbadge.dot{min-width:9px;width:9px;height:9px;padding:0;top:5px;right:calc(50% - 18px)}
-/* 잠재력 탭의 특성 목록 */
+/* 캐릭터 탭의 특성 목록 */
 .tlist{display:grid;gap:7px;margin-top:4px}
-.titem{background:#f7f8fd;border:1px solid var(--line);border-radius:11px;padding:8px 11px;font-size:12.5px}
+.titem{background:var(--soft);border:1px solid var(--line);border-radius:11px;padding:8px 11px;font-size:12.5px}
 .titem b{display:block;font-size:13px;margin-bottom:2px}
 .titem span{color:var(--sub)}
 .rowline .v.stars{letter-spacing:1px}
@@ -84,11 +280,11 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
   animation:popIn .34s cubic-bezier(.2,1.3,.4,1) both;
 }
 @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.82)}}
-.scoutpop .spk{font-size:11.5px;font-weight:800;letter-spacing:.5px;color:var(--indigo);
+.scoutpop .spk{font-size:11.5px;font-weight:800;letter-spacing:.5px;color:var(--kicker);
   background:var(--indigo-l);border-radius:99px;padding:3px 11px;display:inline-block}
 .scoutpop .spn{font-size:23px;font-weight:800;margin:10px 0 6px;letter-spacing:-.5px}
 .scoutpop .spl{font-size:13.5px;line-height:1.5;color:var(--sub)}
-.scoutpop .spgo{margin-top:12px;font-size:12px;font-weight:700;color:var(--indigo)}
+.scoutpop .spgo{margin-top:12px;font-size:12px;font-weight:700;color:var(--kicker)}
 @media (prefers-reduced-motion: reduce){ .scoutpop{animation:none} }
 /* ── 6차 E. 메달 ── */
 .medaltoast{
@@ -101,16 +297,16 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
 .medaltoast .tipx{position:absolute;top:6px;right:6px;background:none;border:0;color:#fff;
   opacity:.8;font:inherit;font-size:12.5px;cursor:pointer;padding:2px 6px}
 .mlist{display:grid;gap:7px;margin-top:6px}
-.mitem{display:flex;align-items:flex-start;gap:9px;background:#f7f8fd;border:1px solid var(--line);
+.mitem{display:flex;align-items:flex-start;gap:9px;background:var(--soft);border:1px solid var(--line);
   border-radius:11px;padding:9px 11px}
 .mitem.done{background:var(--indigo-l);border-color:#cfcbef}
 .mitem .mk{color:#b6bcd0;font-size:14px;line-height:1.3;flex:none}
-.mitem.done .mk{color:var(--indigo)}
+.mitem.done .mk{color:var(--kicker)}
 .mitem .mb{flex:1;min-width:0;font-size:12.5px}
 .mitem .mb b{display:block;font-size:13.5px;margin-bottom:1px}
 .mitem .mb span{color:var(--sub);line-height:1.45}
-.mitem .ma{font-size:11.5px;font-weight:800;color:var(--indigo);flex:none}
-.tlline.medal .tt{color:var(--indigo-d);font-weight:700}
+.mitem .ma{font-size:11.5px;font-weight:800;color:var(--kicker);flex:none}
+.tlline.medal .tt{color:var(--kicker);font-weight:700}
 /* 6.1차 5. 고른 뒤 드러나는 한 줄 */
 .tlline.side .tt{color:var(--sub);font-style:italic}
 @media (prefers-reduced-motion: reduce){
@@ -124,7 +320,7 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
 .csteps .cs{font-size:11.5px;font-weight:700;color:var(--sub);background:#eceef6;
   border-radius:99px;padding:4px 10px}
 .csteps .cs.on{background:var(--indigo);color:#fff}
-.csteps .cs.done{background:var(--indigo-l);color:var(--indigo)}
+.csteps .cs.done{background:var(--indigo-l);color:var(--kicker)}
 .story{margin:10px 0 4px}
 .story p{font-size:15px;line-height:1.75;margin:0 0 9px;color:var(--ink)}
 .traitline{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0 0 6px;
@@ -134,12 +330,12 @@ body.hastabs #app{padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
 .rgroup{border:1px solid var(--line);border-radius:13px;padding:10px 11px;margin:9px 0;background:#fbfbff}
 .rgroup .rhead{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
 .rgroup .rhead b{font-size:14px}
-.rgroup .rhead span{font-size:11.5px;color:var(--indigo);font-weight:700}
+.rgroup .rhead span{font-size:11.5px;color:var(--kicker);font-weight:700}
 .rgroup .rnote{font-size:12px;color:var(--sub);line-height:1.5;margin:4px 0 8px}
 .rchips{display:flex;flex-wrap:wrap;gap:6px}
 .rchip{background:#fff;border:1.5px solid var(--line);border-radius:99px;padding:6px 11px;
   font:inherit;font-size:12.5px;color:var(--ink);cursor:pointer}
-.rchip.on{background:var(--indigo);border-color:var(--indigo);color:#fff;font-weight:700}
+.rchip.on{background:var(--indigo);border-color:var(--kicker);color:#fff;font-weight:700}
 /* ── 6차 C-4. 잠긴 선택지 ── */
 .choice.locked{opacity:.62;cursor:default;background:#f6f7fb;border-style:dashed}
 .choice.locked .t{color:var(--sub)}
@@ -162,7 +358,7 @@ p{margin:0 0 10px}
    0-2. 상태 막대는 그림 위에 겹치지 않고 그림 아래에 따로 놓는다. */
 .hud{
   position:sticky;top:0;z-index:30;margin:0 -12px 10px;overflow:hidden;
-  background:#eef0f7;border-bottom:1px solid var(--line);border-radius:0 0 18px 18px;
+  background:var(--hudbg);border-bottom:1px solid var(--line);border-radius:0 0 18px 18px;
   display:flex;flex-direction:column;
 }
 .artbox{position:relative;height:clamp(118px,17.5vh,156px);flex:none;overflow:hidden}
@@ -198,7 +394,7 @@ p{margin:0 0 10px}
 .gauge .gn,.axis .gn{font-size:11.5px;color:var(--sub);white-space:nowrap;width:46px;flex:none}
 .gauge .gcells{flex:1;min-width:0;display:flex;gap:3px}
 .gauge .gcells i{flex:1;height:12px;border-radius:3px;border:1.5px solid #cdd3e6;background:transparent}
-.gauge .gcells i.on{background:var(--indigo);border-color:var(--indigo)}
+.gauge .gcells i.on{background:var(--indigo);border-color:var(--kicker)}
 .gauge.low .gcells i.on{
   background:var(--down);border-color:var(--down);
   background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.55) 0 2px,transparent 2px 5px);
@@ -217,7 +413,7 @@ p{margin:0 0 10px}
 .axis.debt .aw{color:var(--down)}
 /* 잠재력 + 지금 등급을 나란히 (5차 보완 3) */
 .scout.wide .srow{gap:8px}
-.scout.wide .sg{width:30px;flex:none;text-align:right;font-size:14px;font-weight:800;color:var(--indigo)}
+.scout.wide .sg{width:30px;flex:none;text-align:right;font-size:14px;font-weight:800;color:var(--kicker)}
 .scout.wide .srow.head{margin:2px 0 4px}
 .scout.wide .srow.head .sv,.scout.wide .srow.head .sg{font-size:10.5px;font-weight:700;color:var(--sub)}
 .scout .snote{margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);
@@ -237,9 +433,9 @@ p{margin:0 0 10px}
 .srow{display:flex;align-items:center;gap:5px}
 .srow .sn{font-size:11.5px;color:var(--sub);white-space:nowrap}
 /* 등급 글자 — 색이 아니라 글자로 읽힌다 (0-4) */
-.srow .stier{margin-left:auto;font-size:15px;font-weight:800;color:var(--indigo);white-space:nowrap;
+.srow .stier{margin-left:auto;font-size:15px;font-weight:800;color:var(--kicker);white-space:nowrap;
   letter-spacing:.3px;font-variant-numeric:tabular-nums;min-width:26px;text-align:right}
-.sbar{height:5px;border-radius:99px;background:#dfe1ec;margin-top:2px;overflow:hidden}
+.sbar{height:5px;border-radius:99px;background:var(--track);margin-top:2px;overflow:hidden}
 .sbar i{display:block;height:100%;background:var(--indigo);border-radius:99px;transition:width .35s ease}
 .scell.warn .stier{color:var(--down)}
 .scell.warn .sbar i{background:var(--down)}
@@ -302,10 +498,10 @@ p{margin:0 0 10px}
 @media (prefers-reduced-motion: reduce){ .ticker .tx{animation:none} }
 /* 턴 정리 화면의 '이번 5년의 여론' 카드 */
 .opcard{border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;margin-top:12px}
-.opcard .ol{font-size:12px;font-weight:800;color:var(--indigo);margin-bottom:2px}
+.opcard .ol{font-size:12px;font-weight:800;color:var(--kicker);margin-bottom:2px}
 .opmore{
   display:block;width:100%;margin-top:6px;background:none;border:0;border-top:1px dashed var(--line);
-  padding:7px 0 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--indigo);cursor:pointer;text-align:right;
+  padding:7px 0 0;font:inherit;font-size:12.5px;font-weight:700;color:var(--kicker);cursor:pointer;text-align:right;
 }
 /* 상태 아이콘 — 단계는 색이 아니라 점 개수로 구분 */
 .sicon{
@@ -324,7 +520,7 @@ p{margin:0 0 10px}
 .ftabs{display:flex;gap:6px;margin:10px 0 2px}
 .ftab{flex:1;background:#f2f3f8;border:1.5px solid var(--line);border-radius:10px;padding:7px 6px;
   font:inherit;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer}
-.ftab.on{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.ftab.on{background:var(--indigo);border-color:var(--kicker);color:#fff}
 .ftabs.boxes{margin-top:4px}
 /* ══════════════════════════════════════════════════════════════════════════
    6.1차 6-1 — 여론 글의 성격
@@ -332,32 +528,41 @@ p{margin:0 0 10px}
    빨강·파랑은 정당 색이 떠올라 쓰지 않았다. 색만이 아니라 기호로도 읽힌다.
    ══════════════════════════════════════════════════════════════════════════ */
 .fitem .fk .fmk{font-size:9.5px;margin-right:3px;font-weight:900;line-height:1}
-.fitem .fk.t-pos{background:var(--indigo-l);border:1px solid #bdb7ea;color:var(--indigo-d)}
+.fitem .fk.t-pos{background:var(--indigo-l);border:1px solid #bdb7ea;color:var(--kicker)}
 .fitem .fk.t-mid{background:#eef0f6;border:1px solid #d3d8e6;color:var(--sub)}
 .fitem .fk.t-neg{background:#f7e6ee;border:1px solid #dcaec4;color:#8d2650}
-.fitem .fk.t-self{background:#e9e7f7;border:1px dashed #b9b2e2;color:var(--indigo-d)}
+.fitem .fk.t-self{background:#e9e7f7;border:1px dashed #b9b2e2;color:var(--kicker)}
 .fitem.alertitem .ft{font-weight:700}
 /* 성격 비율 한 줄 막대 */
 .tonebar{display:flex;gap:3px;margin:8px 0 2px;height:22px}
 .tonebar .tb{display:flex;align-items:center;justify-content:center;gap:3px;
   border-radius:7px;font-size:11px;font-weight:800;min-width:26px;overflow:hidden;white-space:nowrap}
 .tonebar .tb b{font-size:10px;line-height:1}
-.tonebar .tb.t-pos{background:var(--indigo-l);color:var(--indigo-d);border:1px solid #bdb7ea}
+.tonebar .tb.t-pos{background:var(--indigo-l);color:var(--kicker);border:1px solid #bdb7ea}
 .tonebar .tb.t-mid{background:#eef0f6;color:var(--sub);border:1px solid #d3d8e6}
 .tonebar .tb.t-neg{background:#f7e6ee;color:#8d2650;border:1px solid #dcaec4}
 /* 선택지 효과 표시 (5차 A-5) */
 .efx{display:flex;flex-wrap:wrap;gap:4px 6px;align-items:center}
-.efx .ec{font-size:11.5px;font-weight:700;color:var(--sub);background:#f1f2f7;
+.efx .ec{font-size:11.5px;font-weight:700;color:var(--sub);background:var(--soft);
   border:1px solid var(--line);border-radius:7px;padding:1px 7px;white-space:nowrap}
+/* 7차 D-1. 자원을 내주고 확실한 것을 얻는 거래 */
+.efx .ec.trade{border-style:dashed;border-color:var(--kicker);color:var(--kicker)}
+/* 7차 D-5. 기록 내보내기·불러오기 */
+.filerow{display:flex;gap:8px;margin-top:6px}
+.filerow .linkbtn{width:auto;flex:1}
+.filerow .btn{margin-top:0}
+.savenote{position:relative;padding-right:30px}
+.savenote .tipx{position:absolute;top:4px;right:4px;background:none;border:0;color:var(--sub);
+  font:inherit;font-size:12.5px;cursor:pointer;padding:2px 6px}
 .efx .er{font-size:12px;font-weight:800;border-radius:7px;padding:1px 7px;white-space:nowrap;
-  background:#eeedf8;color:var(--up)}
-.efx .er.dn{background:#fbecf2;color:var(--down)}
+  background:var(--upsoft);color:var(--up)}
+.efx .er.dn{background:var(--downsoft);color:var(--down)}
 /* ── 6.1차 5. 겉으로 드러나지 않는 영향 표시 ── */
 .efx .sidemark{
   font-size:11.5px;font-weight:700;border-radius:7px;padding:2px 7px;white-space:nowrap;
-  background:#eef0f7;color:var(--sub);border:1px dashed #c3c9dc;cursor:pointer;
+  background:var(--soft);color:var(--sub);border:1px dashed var(--line);cursor:pointer;
 }
-.efx .sidemark.risky{background:#fbecf2;color:var(--down);border-color:#e3bccd}
+.efx .sidemark.risky{background:var(--downsoft);color:var(--down);border-color:var(--down)}
 /* 그림이 주인공인 장면에서는 글 카드를 작게 (5차 A-1 · 6차 D-1) */
 .hud.big ~ .card,.hud.big + .card{padding:11px 13px;margin-top:8px}
 .hud.big ~ .card h3{font-size:16px;margin-bottom:5px}
@@ -378,7 +583,7 @@ p{margin:0 0 10px}
   font-size:10.5px;font-weight:800;border:1.5px solid var(--line);border-radius:5px;
   padding:1px 5px;color:var(--sub);white-space:nowrap;
 }
-.fitem.f-news .fk{border-color:var(--indigo);color:var(--indigo)}
+.fitem.f-news .fk{border-color:var(--kicker);color:var(--kicker)}
 .fitem.f-rival .fk{border-color:var(--down);color:var(--down)}
 .fitem .ft{flex:1;min-width:0}
 .fitem .fa{font-size:11px;color:var(--sub);white-space:nowrap}
@@ -386,7 +591,7 @@ p{margin:0 0 10px}
 .rivalbox{border:1.5px solid var(--line);border-radius:13px;padding:10px 12px;margin:8px 0}
 .rivalbox .rn{font-size:16px;font-weight:800}
 .rivalbox .ro{font-size:12.5px;color:var(--sub);margin-top:1px}
-.rivalbox .rw{font-size:12.5px;font-weight:700;color:var(--indigo);margin-top:5px}
+.rivalbox .rw{font-size:12.5px;font-weight:700;color:var(--kicker);margin-top:5px}
 .rivalbox .rw.dim{color:var(--sub);font-weight:400}
 .rivalbox .nem{font-size:11px;font-weight:700;color:#fff;background:var(--ink);border-radius:999px;padding:1px 8px;vertical-align:3px}
 /* 주변 인물 한마디 */
@@ -394,7 +599,7 @@ p{margin:0 0 10px}
   border-left:3px solid var(--indigo);background:var(--indigo-l);border-radius:0 10px 10px 0;
   padding:8px 12px;margin-top:10px;font-size:13.5px;
 }
-.confidant b{color:var(--indigo)}
+.confidant b{color:var(--kicker)}
 /* 시대 흐름 뉴스 줄 */
 .newsbar{
   background:var(--ink);color:#fff;border-radius:12px;padding:8px 12px;margin:10px 0 0;
@@ -572,33 +777,33 @@ body.ending{background:#171a2b}
 .crow:last-child::before{bottom:calc(100% - 14px)}
 .cdot{width:12px;height:12px;border-radius:99px;background:#fff;border:2.5px solid var(--line);
   flex:none;margin-top:3px;position:relative;z-index:1}
-.crow.key .cdot{border-color:var(--indigo);background:var(--indigo)}
+.crow.key .cdot{border-color:var(--kicker);background:var(--indigo)}
 .cbody{flex:1;min-width:0}
 .ct{display:block;font-size:11px;font-weight:800;color:var(--sub)}
 .cl{display:block;font-size:14px;margin-top:1px;word-break:keep-all}
-.cstar{display:inline-block;margin-top:3px;font-size:11.5px;font-weight:700;color:var(--indigo)}
+.cstar{display:inline-block;margin-top:3px;font-size:11.5px;font-weight:700;color:var(--kicker)}
 .ckey{display:inline-block;margin-top:3px;margin-left:8px;font-size:11px;font-weight:700;
   color:#fff;background:var(--indigo);border-radius:99px;padding:1px 8px}
 /* 4장. 사람들의 말 */
 .bubble{position:relative;margin:10px 0 14px;padding:11px 14px;border-radius:14px;font-size:14.5px;
   background:var(--indigo-l);word-break:keep-all}
 .bubble.b1{background:#f1f2f6}
-.bubble b{display:block;font-size:11.5px;font-weight:800;color:var(--indigo);margin-bottom:3px}
+.bubble b{display:block;font-size:11.5px;font-weight:800;color:var(--kicker);margin-bottom:3px}
 .bubble.b1 b{color:var(--sub)}
 .bubble::after{content:'';position:absolute;left:18px;bottom:-7px;width:13px;height:13px;
   background:inherit;transform:rotate(45deg)}
 /* 5장. 인물 사전 */
 .card.dict{border:2px solid var(--indigo);background:#fbfbff}
 .dict .dname{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-top:2px}
-.dict .dtitle{font-size:15px;font-weight:800;color:var(--indigo);margin-top:2px}
+.dict .dtitle{font-size:15px;font-weight:800;color:var(--kicker);margin-top:2px}
 .dict .dline{font-size:12.5px;color:var(--sub);margin-top:3px}
 .newend{background:var(--ink);color:#fff;border-radius:12px;padding:10px 14px;margin:10px 0;
   font-size:13px;font-weight:700;text-align:center}
 .storyline.despite{margin-top:12px;padding-top:11px;border-top:1px dashed var(--line);
-  font-weight:700;color:var(--indigo)}
+  font-weight:700;color:var(--kicker)}
 /* 도감 */
 .bookbar{display:flex;align-items:center;gap:9px;margin:4px 0 12px}
-.bookbar .bt{font-size:12.5px;font-weight:800;color:var(--indigo);white-space:nowrap}
+.bookbar .bt{font-size:12.5px;font-weight:800;color:var(--kicker);white-space:nowrap}
 .bookbar .bb{flex:1;min-width:0;height:8px;border-radius:99px;background:#e9eaf1;overflow:hidden}
 .bookbar .bb i{display:block;height:100%;background:var(--indigo);border-radius:99px}
 .bookbar .bp{font-size:11.5px;color:var(--sub);white-space:nowrap}
@@ -607,7 +812,7 @@ body.ending{background:#171a2b}
 .bcards{display:grid;grid-template-columns:1fr 1fr;gap:6px}
 .ecard{display:block;text-align:left;width:100%;background:#fff;border:1.5px solid var(--line);
   border-radius:11px;padding:8px 10px;font:inherit;color:var(--ink);cursor:pointer}
-.ecard.open{grid-column:1/-1;border-color:var(--indigo)}
+.ecard.open{grid-column:1/-1;border-color:var(--kicker)}
 .ecard.locked{background:#f6f6fa;color:var(--sub);cursor:default;display:flex;gap:7px;align-items:flex-start}
 .ecard .en{display:block;font-size:13px;font-weight:800;word-break:keep-all}
 .ecard .eh{display:block;font-size:11px;color:var(--sub);margin-top:2px;word-break:keep-all}
@@ -622,7 +827,7 @@ body.ending{background:#171a2b}
 .scout .sn{font-size:11px;color:var(--sub);white-space:nowrap}
 .scout .srow{display:flex;align-items:center;gap:9px;margin:7px 0}
 .scout .sl{font-size:12.5px;font-weight:700;color:var(--sub);width:66px;flex:none;white-space:nowrap}
-.scout .sv{font-size:16px;font-weight:800;color:var(--indigo);width:42px;flex:none;text-align:right;
+.scout .sv{font-size:16px;font-weight:800;color:var(--kicker);width:42px;flex:none;text-align:right;
   font-variant-numeric:tabular-nums}
 .scout .sb{flex:1;min-width:0;height:9px;border-radius:99px;background:#e9eaf1;overflow:hidden}
 .scout .sb i{display:block;height:100%;border-radius:99px;animation:scoutGrow .7s cubic-bezier(.2,.8,.3,1) both}
@@ -631,7 +836,7 @@ body.ending{background:#171a2b}
 .scout .srow.closed .sv{font-size:17px}
 .scout .sb i.q{width:100%;background:repeating-linear-gradient(90deg,#e4e6ef 0 6px,transparent 6px 12px);animation:none}
 /* 재능을 알게 된 줄 (연대기) */
-.tlline.reveal .tt{color:var(--indigo);font-weight:700}
+.tlline.reveal .tt{color:var(--kicker);font-weight:700}
 .tlline.reveal .rv{
   display:inline-block;font-size:10.5px;font-weight:800;color:#fff;background:var(--indigo);
   border-radius:5px;padding:1px 6px;margin-right:5px;vertical-align:1px;
@@ -640,8 +845,9 @@ body.ending{background:#171a2b}
 @media (prefers-reduced-motion: reduce){ .scout .sb i{animation:none} }
 
 /* ---------- 카드 ---------- */
-.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px;margin:10px 0}
-.kicker{font-size:12px;font-weight:700;color:var(--indigo);letter-spacing:.4px;margin-bottom:4px}
+.card{background:var(--card);border:1px solid var(--cardline);border-radius:var(--radius);padding:16px;margin:10px 0}
+.kicker{font-size:12px;font-weight:700;color:var(--kicker);letter-spacing:.4px;margin-bottom:4px}
+h1,h2,h3{letter-spacing:var(--titlespace)}
 .desc{color:var(--sub);font-size:14px}
 .divider{height:1px;background:var(--line);margin:12px 0}
 
@@ -651,9 +857,13 @@ body.ending{background:#171a2b}
   border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;margin:8px 0;
   font:inherit;color:var(--ink);cursor:pointer;
 }
-.choice:hover{border-color:var(--indigo);background:var(--indigo-l)}
+/* 카드 안에 놓인 선택지는 카드보다 한 톤 연하게 (어두운 옷에서 구분이 살아난다) */
+.card .choice{background:var(--soft)}
+.choice:hover{border-color:var(--kicker);background:var(--indigo-l)}
 .choice .t{font-weight:700;font-size:15px}
 .choice .h{font-size:13px;color:var(--sub);margin-top:2px}
+/* 7차 B-3. 강점·약점 길잡이 한 줄 */
+.choice .ohint{font-size:12.5px;color:var(--sub);margin-top:3px;line-height:1.5;word-break:keep-all}
 .choice .tag{
   display:inline-block;font-size:11px;font-weight:700;color:#fff;background:var(--indigo);
   border-radius:999px;padding:1px 8px;margin-right:6px;vertical-align:1px;
@@ -668,24 +878,25 @@ body.ending{background:#171a2b}
   padding:15px;font:inherit;font-weight:700;font-size:16px;cursor:pointer;margin-top:12px;
 }
 .btn:hover{background:var(--indigo-d)}
-.btn.ghost{background:#fff;color:var(--indigo);border:1.5px solid var(--indigo)}
+.btn.ghost{background:transparent;color:var(--kicker);border:1.5px solid var(--kicker)}
 input[type=text]{
   width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font:inherit;
+  background:var(--card);color:var(--ink);
 }
-input[type=text]:focus{outline:none;border-color:var(--indigo)}
+input[type=text]:focus{outline:none;border-color:var(--kicker)}
 .seg{display:flex;gap:8px;margin-top:8px}
 .seg button{
-  flex:1;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:#fff;
+  flex:1;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:var(--card);
   font:inherit;font-weight:700;cursor:pointer;color:var(--ink);
 }
-.seg button[aria-pressed=true]{background:var(--indigo);color:#fff;border-color:var(--indigo)}
+.seg button[aria-pressed=true]{background:var(--indigo);color:#fff;border-color:var(--kicker)}
 
 /* ---------- 결과/변화량 ---------- */
 .deltas{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .delta{font-size:13px;font-weight:700;border-radius:999px;padding:3px 10px;border:1.5px solid}
-.delta.up{color:var(--up);border-color:var(--up);background:#eeecfa}
-.delta.down{color:var(--down);border-color:var(--down);background:#fbecf2}
-.note{font-size:12.5px;color:var(--sub);background:#fafaff;border:1px dashed var(--line);border-radius:12px;padding:8px 10px;margin-top:8px}
+.delta.up{color:var(--up);border-color:var(--up);background:var(--upsoft)}
+.delta.down{color:var(--down);border-color:var(--down);background:var(--downsoft)}
+.note{font-size:12.5px;color:var(--sub);background:var(--soft);border:1px dashed var(--line);border-radius:12px;padding:8px 10px;margin-top:8px}
 .list{margin:0;padding-left:18px;font-size:14px}
 .list li{margin-bottom:3px}
 .rowline{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:5px 0;border-bottom:1px dashed var(--line)}
@@ -694,27 +905,28 @@ input[type=text]:focus{outline:none;border-color:var(--indigo)}
 .rowline .v{font-weight:700;text-align:right}
 .center{text-align:center}
 .small{font-size:12.5px;color:var(--sub)}
-.badge{display:inline-block;font-size:12px;border:1.5px solid var(--indigo);color:var(--indigo);border-radius:999px;padding:2px 10px;margin:3px 4px 0 0}
+.badge{display:inline-block;font-size:12px;border:1.5px solid var(--kicker);color:var(--kicker);border-radius:999px;padding:2px 10px;margin:3px 4px 0 0}
 .storyline{font-size:16px;line-height:1.7;margin:4px 0 0}
 /* 한 화면에서 여러 개를 고르는 선택 (공약 + 선거 운동) */
 .group{margin-top:14px}
-.group>.gl{font-size:12px;font-weight:700;color:var(--indigo);margin-bottom:6px}
-.btn[disabled]{background:#c9c8dd;cursor:not-allowed}
+.group>.gl{font-size:12px;font-weight:700;color:var(--kicker);margin-bottom:6px}
+/* 아직 누를 수 없는 버튼. 안내 글이 적히는 자리라 흐리게만 두지 않고 읽히게 한다. */
+.btn[disabled]{background:var(--soft);color:var(--sub);border:1.5px solid var(--line);cursor:not-allowed}
 /* 선거 결과 */
-.bigresult{text-align:center;font-size:30px;font-weight:800;letter-spacing:-1px;color:var(--indigo);margin:6px 0}
+.bigresult{text-align:center;font-size:30px;font-weight:800;letter-spacing:-1px;color:var(--kicker);margin:6px 0}
 .bigresult.lost{color:var(--down)}
 /* ── 계획 화면 (단계적으로 펼쳐짐) ── */
 .planstep{margin-top:16px;animation:slideIn .32s ease}
 .planstep:first-of-type{margin-top:8px}
 @keyframes slideIn{ from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
-.planstep .sl{font-size:12px;font-weight:700;color:var(--indigo);margin-bottom:2px}
+.planstep .sl{font-size:12px;font-weight:700;color:var(--kicker);margin-bottom:2px}
 .planstep .sq{font-size:14.5px;margin-bottom:8px}
 /* 이미 고른 단계는 접혀서 한 줄로 보인다. 누르면 다시 고를 수 있다. */
 .picked{
   display:flex;align-items:center;gap:8px;width:100%;text-align:left;background:var(--indigo-l);
   border:1.5px solid var(--indigo);border-radius:13px;padding:11px 13px;font:inherit;color:var(--ink);cursor:pointer;
 }
-.picked .pk{font-size:11px;font-weight:700;color:var(--indigo);white-space:nowrap}
+.picked .pk{font-size:11px;font-weight:700;color:var(--kicker);white-space:nowrap}
 .picked .pv{font-weight:700;font-size:14.5px;flex:1;min-width:0}
 .picked .pe{font-size:11px;color:var(--sub);white-space:nowrap}
 .picked[data-locked=true]{background:#f7f7fb;border-color:var(--line);cursor:default}
@@ -725,7 +937,7 @@ input[type=text]:focus{outline:none;border-color:var(--indigo)}
 /* ── 타임라인 ── */
 .tlwrap{min-height:330px;display:flex;flex-direction:column}
 .tlage{
-  text-align:center;font-size:44px;font-weight:800;letter-spacing:-2px;color:var(--indigo);
+  text-align:center;font-size:44px;font-weight:800;letter-spacing:-2px;color:var(--kicker);
   line-height:1.05;margin:2px 0 0;
 }
 .tlage small{display:block;font-size:12px;font-weight:700;letter-spacing:0;color:var(--sub);margin-top:2px}
@@ -744,7 +956,7 @@ input[type=text]:focus{outline:none;border-color:var(--indigo)}
 .retirecard .sq{margin:12px 0 8px;font-size:14px;font-weight:700}
 /* 턴 정리 화면의 접히는 연대기 */
 details.chron{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:#fafaff;padding:6px 12px}
-details.chron summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--indigo);list-style:none;padding:6px 0}
+details.chron summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--kicker);list-style:none;padding:6px 0}
 details.chron summary::-webkit-details-marker{display:none}
 details.chron summary::before{content:'▸ '}
 details.chron[open] summary::before{content:'▾ '}
@@ -754,7 +966,7 @@ details.chron .tlline{font-size:13.5px}
   animation:fadeUp .26s ease; font-size:14.5px;
 }
 .tlline:first-child{border-top:0}
-.tlline .ta{font-size:11.5px;font-weight:700;color:var(--indigo);min-width:30px;padding-top:2px}
+.tlline .ta{font-size:11.5px;font-weight:700;color:var(--kicker);min-width:30px;padding-top:2px}
 .tlline .tt{flex:1;min-width:0}
 .tlline.dim .tt{color:var(--sub)}
 @keyframes fadeUp{ from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:none} }
@@ -763,8 +975,11 @@ details.chron .tlline{font-size:13.5px}
   display:block;margin:8px auto 0;background:#fff;border:1.5px solid var(--line);border-radius:12px;
   padding:9px 18px;font:inherit;font-size:13px;font-weight:700;color:var(--sub);cursor:pointer;
 }
-.tlskip:hover{border-color:var(--indigo);color:var(--indigo)}
-.arrows{font-weight:700;font-size:13px;white-space:nowrap}
+.tlskip:hover{border-color:var(--kicker);color:var(--kicker)}
+/* 묶음 전체를 한 줄로 묶으면 넷 이상일 때 마지막 것이 화면 밖으로 잘린다.
+   낱개는 붙여 두고 낱개 사이에서만 줄이 바뀌게 한다. */
+.arrows{font-weight:700;font-size:13px}
+.arrows>span{white-space:nowrap}
 .arrows .up{color:var(--up)} .arrows .dn{color:var(--down)}
 /* 움직임 줄이기 설정이 켜져 있으면 애니메이션을 끈다 */
 @media (prefers-reduced-motion:reduce){
@@ -781,7 +996,7 @@ html{scroll-behavior:smooth}
 <script>
 "use strict";
 /* ============================================================================
-   대통령 되기 시뮬레이터 — 턴 0(고교) ~ 턴 3(30~35세)
+   대통령 되기 시뮬레이터 — 턴 0(고교 16~19세) ~ 턴 7(50~55세), 그 뒤 은퇴 후의 삶
    ----------------------------------------------------------------------------
    [코드를 몰라도 고치는 법]
    · 숫자만 바꾸고 싶다 → [1] CONFIG 만 보세요.
@@ -909,6 +1124,9 @@ const CONFIG = {
     ptWeight:0.4,          /* 이번 턴 성과 점수를 등급에 반영하는 비율 */
     /* 후반 턴이 몇 개든 쓸 수 있게, 첫 턴 기준값과 턴마다 올라가는 폭으로 적는다.
        (나이가 들수록 능력치가 높아 점수도 커지므로 기준도 조금씩 올라간다) */
+    /* 7차 D: 대선 공식은 건드리지 않았다. 위험한 선택의 이득이 커져 대충 한 판의
+       당선률이 올랐을 때, 공식을 낮추면 잘한 판까지 같이 내려가 다섯 목표가 더
+       어긋났다. 대신 그 선택들이 나중에 물어야 할 값(청렴도·위기)을 키웠다. */
     cutsBase:{ high:33, low:26 }, cutsStep:1,
 
     /* 일찍 나가면 새 얼굴, 늦게 나가면 경륜. 어느 시점도 확실히 유리하지 않게 맞춘다.
@@ -1032,11 +1250,13 @@ const CONFIG = {
       /* ── 5차 B. 칸이 열리는 방식 ──────────────────────────────────────
          시작할 때는 다섯 칸 모두 물음표다. 재능 값은 캐릭터를 만들 때 이미
          정해져 있고, 아래 세 가지 계기로 '알게 될' 뿐이다. */
-      /* 1) 고교 활동과 연결된 칸 — 어느 칸이 먼저 열리는지만 정한다 (값은 바뀌지 않는다) */
-      actLink:{ study:'policy', council:'org', debate:'speech',
-                art:'fame', startup:'org', volunteer:'stamina' },
+      /* 1) 고교 활동과 이어진 칸 — 어느 칸이 먼저 열리는지만 정한다 (값은 바뀌지 않는다).
+            어떤 활동이 어떤 재능으로 이어지는지는 HS_ACTIVITIES 의 talent 칸에 있다. */
       /* 2) 그 능력을 처음 크게 쓰는 순간 — 한 번에 이만큼 오르거나 판정에 쓰이면 열린다 */
       revealGain:7,
+      /* 7차 C-2. 알게 됐을 때 나오는 문구를 높음·중간·낮음 셋으로 나눈다 (임시값).
+         재능 한 칸은 8~34 사이이고 평균이 20이다. */
+      revealHigh:24, revealLow:16,
       /* 3) 이 턴(40세)부터는 남은 칸이 모두 열린다 */
       revealAllTurn:5,
       /* 6.1차 2. 해금 알림이 화면 가운데 떠 있는 시간 (임시값) */
@@ -1078,18 +1298,24 @@ const CONFIG = {
     /* 매년 들어오는 돈 (진로별 기본값) */
     /* 정치 외길만 5였을 때 '잘 관리한 판'에서도 파산 몰락이 12%를 넘었다.
        어떤 진로도 늘 불리하면 안 되므로(설계 9번) 7로 올렸다 (4차 A-3). */
-    incomeByCareer:{ law:9, sci:7, media:7, ent:8, biz:12, poli:7 },
+    /* 7차 D-3. 돈이 적은 진로는 '가난한' 것이 아니라 '크게 벌지 못하는' 것이다.
+       해마다 들어오는 돈은 비슷하게 맞추고, 대신 위로 닿는 끝(careerRange)을 낮췄다.
+       그래야 폭만 좁아지고 불리해지지는 않는다. */
+    incomeByCareer:{ law:10, sci:10, media:10, ent:9, biz:13, poli:10 },
     /* 직책이 있으면 더해지는 수입 */
     incomeByPost:{ district:8, proportional:7, governor:10, mayor:8, local:5, defeated:2, outside:3 },
     /* 매년 나가는 돈 */
     livingCost:5,
     officeCost:3,          /* 정치 활동을 시작한 뒤 사무소 운영비 */
     aideCost:3,            /* 대선 캠프 참모 인건비 */
-    /* 집안 형편별 시작 자금과 매년 보정 */
+    /* 집안 형편별 시작 자금과 매년 보정.
+       7차 D-2. 빚을 내 유학을 보내는 집안은 드물다. 형편 차이를 키워,
+       어려운 집은 유학·대학원·창업처럼 돈이 많이 드는 선택을 고르기 어렵게 했다.
+       (예전: 30 / 12 / 2, 해마다 +3 / 0 / -2) */
     background:{
-      rich:{ start:30, yearly:3, name:'넉넉함' },
-      normal:{ start:12, yearly:0, name:'보통' },
-      poor:{ start:2, yearly:-2, name:'어려움' }
+      rich:{ start:42, yearly:4, name:'넉넉함' },
+      normal:{ start:18, yearly:0, name:'보통' },
+      poor:{ start:3, yearly:-2, name:'어려움' }
     },
     backgroundPick:['rich','normal','normal','poor'],
     /* 선거 비용 (출마 선택지의 비용과 별개로 더 든다) */
@@ -1109,6 +1335,34 @@ const CONFIG = {
        조직력을 가장 크게 올려 주는 선택이므로 대가도 실제로 치르게 한다. */
     activityCut:0.65,
     note:'복무가 길어 다른 활동에 쓸 시간이 절반으로 줄었다.'
+  },
+  /* ── 7차 D-3. 진로마다 자금과 체력이 움직이는 폭이 다르다 ─────────────────
+     성공한 경영인·방송인과 성공한 정치 외길이 같은 돈을 가질 수는 없다.
+     · fundsMax / fundsMin — 그 진로에서 자금이 닿을 수 있는 위·아래 끝
+     · staminaMul — 체력이 깎이고 회복하는 폭 (1보다 크면 오르내림이 크다)
+     · gift — 돈이 적은 진로가 대신 받는 비금전 혜택 (해마다 조금씩)
+     어느 진로도 전체적으로 유리하거나 불리해서는 안 된다 (설계 9번).
+     전부 임시값. */
+  /* staminaMul 은 오르는 쪽과 깎이는 쪽에 똑같이 걸린다 — 폭만 달라지고
+     어느 진로도 손해를 보지 않는다. 0~100 에서 잘리는 탓에 배율 차이가 묻혀,
+     실제로 느껴질 만큼 간격을 벌려 두었다 (0.65 ~ 1.5). */
+  careerRange:{
+    law:   { fundsMax:78, fundsMin:-24, staminaMul:0.8,  gift:{ integrity:0.7 } },
+    sci:   { fundsMax:58, fundsMin:-14, staminaMul:0.65, gift:{ policy:0.9, integrity:0.5 } },
+    media: { fundsMax:66, fundsMin:-22, staminaMul:1.0,  gift:{ fame:0.7 } },
+    ent:   { fundsMax:100, fundsMin:-34, staminaMul:1.5, gift:{} },
+    biz:   { fundsMax:100, fundsMin:-40, staminaMul:1.25, gift:{} },
+    poli:  { fundsMax:52, fundsMin:-16, staminaMul:0.7,  gift:{ org:0.9, approval:0.5 } }
+  },
+
+  /* ── 7차 D-1. 자원을 내주면 확실한 것을 얻는다 ───────────────────────────
+     · 돈을 쓰면 판정 없이 결과가 정해진다 (실패가 없다)
+     · 체력을 쓰면 판정에 보탬이 된다
+     쌓아 둔 돈과 몸을 쓸 곳을 만들어 준다 (전부 임시값). */
+  trade:{
+    bodyBonus:14,        /* 몸으로 밀어붙일 때 판정에 더해지는 값 */
+    bodyCost:9,          /* 그때 빠지는 체력 */
+    bodyMinStamina:30    /* 체력이 이 아래면 그 선택은 나오지 않는다 */
   },
   stamina:{
     /* 체력이 이 아래면 몸을 쓰는 선거 운동의 효과가 줄어든다 */
@@ -1145,14 +1399,15 @@ const CONFIG = {
     yearlyCost:4,         /* 매년 나가는 당 운영비 */
     orgGrowth:0.7         /* 조직력 성장이 느리다 */
   },
-  /* ── C-4. 별(영향력) 단계로 열리는 선택지 ────────────────────────────── */
-  /* 체급 1~6. 잠긴 선택지는 이유만 한 줄로 알려 주고 수치는 보여 주지 않는다. */
+  /* ── C-4 (7차 C-1로 다시 연결) 별 단계로 열리는 선택지 ─────────────────
+     별이 이력 기준으로 바뀌었으므로 잠금 문구도 '무엇을 아직 안 했는지'로 바꿨다.
+     체급 = 별 + 1 단계. 잠긴 선택지는 이유만 한 줄로 알려 주고 수치는 쓰지 않는다. */
   tierGate:{
     mid:3, high:4, top:5, best:6,
-    lines:{ 3:'아직 이름이 널리 알려지지 않았다.',
-            4:'당 안에서 이 이야기를 꺼낼 만한 자리가 아니다.',
-            5:'이런 제안을 할 만한 무게가 아직 아니다.',
-            6:'판을 주도할 위치에 서 본 적이 없다.' }
+    lines:{ 3:'아직 정치권에 제대로 발을 들이지 않았다.',
+            4:'아직 선거에서 이겨 본 적이 없다.',
+            5:'한 번 더 이기거나 더 큰 자리에 올라야 꺼낼 수 있는 이야기다.',
+            6:'대선 후보가 되어 본 적이 없다.' }
   },
   /* ── C-8. 측근 배신 ──────────────────────────────────────────────────── */
   betray:{
@@ -1169,8 +1424,10 @@ const CONFIG = {
      잠룡(5단계)부터는 본업 수입만으로는 감당이 안 되게 잡았다. */
   upkeep:{
     /* 해마다 나가는 값이다 (한 턴은 5년). 11/17 로 잡았더니 잘 관리한 판도
-       4분의 1이 파산해서 절반 아래로 낮췄다. */
-    byTier:[0, 0, 1, 3, 5, 8],
+       4분의 1이 파산해서 절반 아래로 낮췄다.
+       7차 C-1로 체급이 이력 기준이 되면서 체급이 늦게 오르게 됐다. 그만큼
+       한 단계당 값을 올려, 예전과 비슷한 돈 압박이 남게 맞췄다. */
+    byTier:[0, 1, 3, 6, 9, 13],
     beforeEntry:0.3      /* 정치를 시작하기 전에는 이 비율만 */
   },
   /* 재산이 짐이 된다 — 자금이 많을수록 재산·후원금 공세가 잦아진다.
@@ -1245,17 +1502,18 @@ const CONFIG = {
     perAction:12,          /* 어정쩡한 행동 한 번마다 쌓이는 양 */
     stages:[ { min:0, key:'none' }, { min:25, key:'mild' }, { min:50, key:'clear' }, { min:75, key:'heavy' } ],
     tagEventAt:50,         /* 이 값을 넘으면 진로별 딱지 이벤트가 뜰 수 있다 */
-    freshBonusMax:40,      /* 원외 참신함 보너스는 경계선이 이 아래일 때만 */
-    tierDropAt:60          /* 40세 이후 이 값을 넘으면 체급이 조금씩 떨어진다 */
+    freshBonusMax:40       /* 원외 참신함 보너스는 경계선이 이 아래일 때만 */
+    /* 7차 C-1. 경계선 때문에 체급이 떨어지던 규칙은 없앴다.
+       체급이 이력이 된 이상, 이미 이룬 일은 뒤늦게 사라지지 않는다. */
   },
 
   /* ── B-7. 체급 ──────────────────────────────────────────────────────── */
+  /* 7차 C-1. 체급은 이제 별(이력)의 다른 이름이다. 능력치로 계산하지 않는다.
+     별 0개 = 무명 … 별 5개 = 유력 대권 주자. 조건은 CAREER_STARS 에 있다. */
   tier:{
-    names:['무명','지역 인사','떠오르는 신예','중진','잠룡','유력 대권 주자'],
-    /* 점수 = 능력치 평균 + 인지도 + 정치 경력 보너스 */
-    cuts:[0, 34, 56, 78, 100, 124],
-    careerBonus:{ district:16, proportional:13, governor:22, mayor:14, local:7, defeated:5, outside:3 },
-    presRunBonus:10        /* 대선에 나가 본 적이 있으면 */
+    /* 이름이 곧 별 단계다. 별 0개부터 5개까지 차례로 대응한다.
+       '현역'은 의원과 단체장 어느 쪽으로 당선돼도 어색하지 않게 고른 말이다. */
+    names:['무명','지역 인사','떠오르는 신예','현역','중진','유력 대권 주자']
   },
 
   /* ══════════════════════════════════════════════════════════════════════
@@ -1537,7 +1795,7 @@ function rollFamily(s){
   s.family = { job:p.id, jobName:p.name, field:p.field, jobLine:p.line,
                sib:sib.id, sibName:sib.name, sibHas:sib.has, sibLine:sib.line };
 }
-/* 잠재력 탭에 한 줄로 보여 준다 */
+/* 캐릭터 탭에 한 줄로 보여 준다 */
 function familyLine(s){
   if(!s || !s.family) return '';
   return s.family.jobName + ' 집안 · ' + s.family.sibName;
@@ -1801,7 +2059,8 @@ const RIVAL_FIRST = {
   title:'{rival}이라는 사람',
   text:function(s){
     var r = s.rival;
-    return r.name + '이라는 사람을 처음 만났다. ' + r.intro +
+    /* 이름 받침에 따라 '이라는 / 라는'이 갈린다 — 보이지 않는 표시를 붙여 맞춘다 */
+    return fixJosa(r.name + JOSA_MARK + '이라는 사람을 처음 만났다. ') + r.intro +
       '\n같은 자리를 보고 있다는 것을 서로 알아봤다.';
   },
   options:[
@@ -1875,6 +2134,16 @@ const CRISIS_EVENTS = {
         success:{ text:'끝까지 아니라고 했고, 결국 무혐의로 끝났다.',
                   effects:{ speech:4, approval:-3 }, relief:28 },
         fail:{ text:'부인할수록 증거가 나왔다.', effects:{ approval:-14, integrity:-8 }, doom:true } },
+      /* 7차 D-1. 돈을 쓰면 판정 없이 확실하게 넘긴다. 쌓아 둔 돈을 쓸 곳이 된다. */
+      { label:'최고의 변호인단을 산다', noRoll:true, needFunds:28,
+        text:'비용이 많이 들었다. 대신 절차는 흠 없이 끝났고, 더 묻는 사람도 없었다.',
+        effects:{ funds:-26, approval:-4 }, relief:38 },
+      /* 7차 D-1. 몸을 쓰면 판정이 쉬워진다 */
+      { label:'전국을 돌며 직접 해명한다', stat:'speech', dc:60, pushBody:true,
+        success:{ text:'수십 곳을 돌며 같은 말을 반복했다. 지친 얼굴이 오히려 진심으로 읽혔다.',
+                  effects:{ approval:6, speech:5 }, relief:32 },
+        fail:{ text:'몸만 축났다. 해명은 끝내 닿지 않았다.',
+               effects:{ approval:-12, integrity:-5 }, doom:true } },
       { label:'정치의 꿈을 내려놓는다', quiet:true,
         text:'회견장에서 짧게 말했다. "여기까지 하겠습니다." 그리고 조용해졌다.' }
     ]
@@ -1916,9 +2185,13 @@ const CRISIS_EVENTS = {
                effects:{ stamina:14, approval:-10 }, relief:16, skipRace:true } },
       { label:'무리해서 일정을 강행한다', stat:'stamina', dc:62,
         success:{ text:'다음 날 단상에 다시 섰다. 사람들이 놀랐다.',
-                  effects:{ approval:9, stamina:-10 }, relief:22 },
+                  effects:{ approval:12, fame:8, stamina:-10 }, relief:22 },
         fail:{ text:'두 번째로 쓰러졌다. 이번엔 일어나는 데 오래 걸렸다.',
                effects:{ stamina:-12, approval:-6 }, doom:true } },
+      /* 7차 D-1. 돈을 쓰면 판정 없이 확실하게 회복한다 */
+      { label:'일정을 비우고 제대로 치료받는다', noRoll:true, needFunds:20,
+        text:'좋은 곳에서 오래 치료받았다. 비용은 많이 들었지만 몸은 확실히 돌아왔다.',
+        effects:{ funds:-18, stamina:30, approval:-4 }, relief:42, skipRace:true },
       { label:'정치의 꿈을 내려놓는다', quiet:true,
         text:'의사의 말을 오래 들었다. 그리고 일정표를 모두 지웠다.' }
     ]
@@ -1938,6 +2211,16 @@ const CRISIS_EVENTS = {
       /* 6차 B-1. 판정 없는 선택 — 확실하지만 불씨가 크게 남고, 한 판에 한 번뿐이다 */
       { label:'침묵한다', noRoll:true, text:'아무 말도 하지 않았다. 조금 가라앉았지만 불씨는 더 깊이 남았다.',
         effects:{ approval:-13, fame:-4 }, relief:10 },
+      /* 7차 D-1. 돈을 쓰면 판정 없이 확실하게 가라앉힌다 */
+      { label:'위기관리 전문가를 붙인다', noRoll:true, needFunds:24,
+        text:'전문가들이 하루 만에 대응 방향을 잡았다. 돈은 많이 나갔지만 불길은 빠르게 잡혔다.',
+        effects:{ funds:-22, approval:-3, speech:4 }, relief:36 },
+      /* 7차 D-1. 몸을 쓰면 판정이 쉬워진다 */
+      { label:'현장을 돌며 얼굴을 보이고 설명한다', stat:'approval', dc:58, pushBody:true,
+        success:{ text:'며칠을 길에서 보냈다. 직접 본 사람들부터 말이 달라지기 시작했다.',
+                  effects:{ approval:10, org:6 }, relief:34 },
+        fail:{ text:'가는 곳마다 같은 질문만 돌아왔다. 몸만 상했다.',
+               effects:{ approval:-11, stamina:-6 }, doom:true } },
       { label:'정치의 꿈을 내려놓는다', quiet:true,
         text:'계정을 닫았다. 더는 설명하고 싶지 않았다.' }
     ]
@@ -2027,24 +2310,32 @@ const FEED_POOL = {
    [4] CAREERS — 진로 6종 (정치 외길은 고교에서 학생회를 골라야 열림)
    coreStats: 등급 판정에 쓰이는 대표 능력치는 아래 gradeStats 로 공통 사용.
    ============================================================================ */
+/* 7차 B-3. strong·weak 은 진로 결정 화면에 한 줄로 나온다.
+   favor 는 '고른 활동과 잘 맞는 진로' 표시에 쓴다. */
 const CAREERS = {
   law:{ id:'law', name:'법조', short:'법조', tagline:'변호사 · 검사',
         hint:'정책력과 신뢰. 대신 정치 입문이 늦다.',
+        strong:'따져 묻는 힘과 흠 없는 이력', weak:'정치에 들어가는 때가 가장 늦다',
         favor:['study','debate'] },
   sci:{ id:'sci', name:'과학 기술', short:'과기', tagline:'연구자 · 엔지니어',
         hint:'청렴한 전문가 이미지. 조직력이 약하다.',
+        strong:'전문가라는 믿음과 깨끗한 손', weak:'사람을 모으는 힘이 약하다',
         favor:['study'] },
   media:{ id:'media', name:'언론', short:'언론', tagline:'기자 · 앵커',
         hint:'연설력과 인지도. 과거 기사가 발목을 잡을 수 있다.',
-        favor:['debate'] },
+        strong:'말솜씨와 빨리 퍼지는 이름', weak:'예전에 쓴 글이 발목을 잡는다',
+        favor:['debate','art'] },
   ent:{ id:'ent', name:'방송', short:'방송', tagline:'배우 · 가수 · 방송인',
         hint:'인지도 최고. 결과의 폭이 가장 크다.',
+        strong:'누구보다 널리 알려진 얼굴', weak:'잘될 때와 안될 때의 차이가 가장 크다',
         favor:['art'] },
   biz:{ id:'biz', name:'경영', short:'경영', tagline:'창업가 · 기업인',
         hint:'정치자금 최고. 청렴도 사건이 잦다.',
-        favor:['startup'] },
+        strong:'쓸 수 있는 돈과 사람을 부리는 솜씨', weak:'돈을 두고 말이 자주 나온다',
+        favor:['council','sports'] },
   poli:{ id:'poli', name:'정치 외길', short:'정치', tagline:'청년 당원 · 보좌관',
         hint:'숨은 진로. 시작부터 정치, 대신 본업 간판이 없다.',
+        strong:'가장 먼저 정치에 발을 들인다', weak:'내세울 본업 간판이 없다',
         favor:['council'], locked:true }
 };
 const GRADE_STATS = ['speech','policy','org','fame']; // 등급 판정에 쓰는 능력치
@@ -2117,6 +2408,17 @@ function josaEulReul(word){
   if(code < 0 || code > 11171) return '를';
   return (code % 28) === 0 ? '를' : '을';
 }
+/* 한국어 '이다/다' 자동 처리 — 받침이 없으면 '다' ('원외 인사이다' → '원외 인사다') */
+function josaIDa(word){
+  var w = String(word);
+  /* 괄호로 끝나면 그 앞 글자를 본다 — '현역 국회의원 (지역구)' */
+  var i = w.length - 1;
+  while(i >= 0 && !/[가-힣]/.test(w.charAt(i))) i--;
+  if(i < 0) return '이다';
+  var code = w.charCodeAt(i) - 0xAC00;
+  if(code < 0 || code > 11171) return '이다';
+  return (code % 28) === 0 ? '다' : '이다';
+}
 /* 한국어 조사 '은/는' 자동 처리 */
 function josaEunNeun(word){
   var code = String(word).charCodeAt(String(word).length - 1) - 0xAC00;
@@ -2126,27 +2428,51 @@ function josaEunNeun(word){
 /* 진로별 선택지 묶음에서 현재 진로 것을 꺼낸다 */
 function byCareer(table, s){ return table[s.career] || table._default; }
 
-/* ---------- 고교 활동 6종 (설계 4번 표) ---------- */
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 B-2 — 고교 활동 다섯 개를 재능 다섯 개에 하나씩 맞춘다
+   무엇을 하면 무엇을 알게 되는지가 한눈에 보이게 한다.
+   다섯 활동의 값어치를 똑같이 맞췄다 — 주 능력 +8, 곁딸린 능력 +4.
+   (예전에는 '내신과 수능 공부'만 체력이 깎여 혼자 손해로 보였다.)
+   talent 칸은 그 활동을 고르면 먼저 열리는 재능이다. 재능 값 자체는 바뀌지 않는다.
+   ══════════════════════════════════════════════════════════════════════════ */
 const HS_ACTIVITIES = [
-  { id:'study',     label:'내신과 수능 공부',      hint:'정책력 · 법조/과기/행정에 유리',
-    effects:{ policy:8, stamina:-4 }, result:'책상 앞에서 3년을 보냈다. 생각을 정리하는 힘이 붙었다.' },
-  { id:'council',   label:'학생회 활동',           hint:'조직력·연설력 · 정치 외길이 열림',
-    effects:{ org:7, speech:5, stamina:-2 }, result:'사람을 모으고 말로 설득하는 일이 몸에 익었다.' },
-  { id:'debate',    label:'토론과 교지 편집',      hint:'연설력 · 언론/법조에 유리',
-    effects:{ speech:8, policy:3 }, result:'말과 글로 싸우는 법을 배웠다.' },
-  { id:'art',       label:'창작과 공연 동아리',    hint:'인지도 · 방송 조기 데뷔 기회',
-    effects:{ fame:8, speech:3 }, result:'무대 위에서 사람들의 눈을 받는 일이 즐거웠다.' },
-  { id:'startup',   label:'창업 동아리와 경진대회', hint:'정치자금 · 경영에 유리',
-    effects:{ funds:8, org:3 }, result:'작게나마 돈을 굴려 봤다. 상금도 조금 남았다.' },
-  { id:'volunteer', label:'봉사 활동',             hint:'청렴도 · 시민사회에 유리',
-    effects:{ integrity:8, approval:2 }, result:'남는 시간은 사람들 곁에서 보냈다.' }
+  { id:'debate',  talent:'speech',  label:'토론 동아리',   hint:'말솜씨를 알게 된다',
+    effects:{ speech:8, policy:4 },  result:'말과 글로 싸우는 법을 배웠다.' },
+  { id:'study',   talent:'policy',  label:'공부와 탐구',   hint:'이해력을 알게 된다',
+    effects:{ policy:8, integrity:4 }, result:'책상 앞에서 3년을 보냈다. 생각을 정리하는 힘이 붙었다.' },
+  { id:'council', talent:'org',     label:'학생회',        hint:'친화력을 알게 된다 · 정치 외길이 열림',
+    effects:{ org:8, speech:4 },     result:'사람을 모으고 말로 설득하는 일이 몸에 익었다.' },
+  { id:'sports',  talent:'stamina', label:'운동부',        hint:'뚝심을 알게 된다',
+    effects:{ stamina:8, org:4 },    result:'매일 뛰었다. 쉽게 지치지 않는 몸이 됐다.' },
+  { id:'art',     talent:'fame',    label:'공연과 창작',   hint:'존재감을 알게 된다',
+    effects:{ fame:8, speech:4 },    result:'무대 위에서 사람들의 눈을 받는 일이 즐거웠다.' }
 ];
+/* 두 가지를 한 번에 고르므로 첫째·둘째의 무게 차이가 없다.
+   고른 둘을 하나로 합쳐 계획 화면의 '고른 것'으로 삼는다. */
+function actById(id){ return HS_ACTIVITIES.filter(function(a){ return a.id === id; })[0]; }
+function combineActs(ids){
+  var list = ids.map(actById).filter(Boolean);
+  var eff = {};
+  list.forEach(function(a){
+    Object.keys(a.effects).forEach(function(k){ eff[k] = (eff[k] || 0) + a.effects[k]; });
+  });
+  return {
+    id:'acts', ids:ids.slice(),
+    label:list.map(function(a){ return a.label; }).join(' + '),
+    logLabel:'고교 활동: ' + list.map(function(a){ return a.label; }).join(', '),
+    effects:eff,
+    result:list.map(function(a){ return a.result; }).join(' '),
+    apply:function(st){ ids.forEach(function(i){ st.hsActs.push(i); }); }
+  };
+}
 
 /* ---------- 진로 선택지 ----------
-   계획 화면에서는 아직 효과가 적용되기 전이므로, 지금까지 고른 것(picks)을 보고 판단한다. */
+   7차 B-1부터 진로는 고교 3년이 지나간 뒤(타임라인 18세)에 고른다.
+   그때는 활동이 이미 적용돼 있으므로 s.hsActs 를 본다.
+   picks 는 계획 화면에서 부를 때를 위해 남겨 둔 것이다 (아직 적용 전인 경우). */
 function careerOptions(s, picks){
   var acts = [];
-  if(picks){ if(picks.act1) acts.push(picks.act1.id); if(picks.act2) acts.push(picks.act2.id); }
+  if(picks && picks.acts && picks.acts.ids) acts = picks.acts.ids.slice();
   else acts = s.hsActs;
   return Object.keys(CAREERS).map(function(k){ return CAREERS[k]; })
     .filter(function(c){ return !c.locked || acts.indexOf('council') >= 0; })
@@ -2165,12 +2491,17 @@ function careerOptions(s, picks){
         var key = { law:'policy', sci:'policy', media:'speech', ent:'fame', biz:'funds', poli:'org' }[c.id];
         eff[key] = (eff[key]||0) + 4;
       }
+      /* 7차 B-3. 어느 활동과 맞았는지 이름을 대 준다 */
+      var matched = acts.map(actById).filter(function(a){ return a && c.favor.indexOf(a.id) >= 0; })[0];
       return {
         id:c.id,
         label:c.name + ' — ' + c.tagline,
         logLabel:'진로: ' + c.name,
-        hint:c.hint + (bonus ? ' (고교 활동 보너스)' : ''),
-        tag: c.locked ? '숨은 진로' : null,
+        hint:'강점 ' + c.strong + ' · 약점 ' + c.weak +
+             (matched ? fixJosa(' / ' + matched.label + '⁣과 잘 맞는다') : ''),
+        tag: c.locked ? '숨은 진로' : (matched ? '잘 맞음' : null),
+        tagKind: c.locked ? null : (matched ? 'rec' : null),
+        showHint:true,          /* 7차 B-3. 강점·약점 줄을 실제로 보여 준다 */
         effects:eff,
         result:'진로를 ' + c.name + josaRo(c.name) + ' 정했다. ' + (bonus ? '고교 3년이 헛되지 않았다.' : '여기서부터 시작이다.'),
         apply:function(st){ st.career = c.id; }
@@ -2221,8 +2552,9 @@ const T1_EXTRA = [
     result:'사람들과 어울리며 이름을 조금 알렸다.' },
   { id:'intern', label:'인턴 근무', hint:'정책력 · 자금', effects:{ policy:5, funds:5 }, pt:3,
     result:'실무를 곁눈질했다. 통장에 돈도 조금 들어왔다.' },
-  { id:'exchange', label:'해외 교환학생', hint:'정책력 · 연설력 · 비용', effects:{ policy:5, speech:4, funds:-6 }, pt:3,
-    result:'낯선 곳에서 말하는 법을 다시 배웠다. 돈은 꽤 들었다.' },
+  /* 7차 D-2. 유학은 '학업 방향'(T1_STUDY)으로 옮겼다.
+     돈이 잠그는 선택지가 대외 활동 쪽에 있으면, 대외 활동을 두 번 고르는
+     여성에게만 잠금이 두 번 걸려 성별 유불리가 생긴다. */
   /* ── 4차 A-2: 인턴 말고도 돈을 버는 길. 얻는 것과 잃는 것이 저마다 다르다 ── */
   { id:'tutor', label:'과외와 아르바이트', hint:'자금 크게 · 시간과 체력', effects:{ funds:9, org:2, stamina:-6 }, pt:1,
     result:'주 네 번 남의 집 거실에 앉아 있었다. 통장은 버텼고 잠은 줄었다.' },
@@ -2232,7 +2564,7 @@ const T1_EXTRA = [
     result:'밤을 새워 낸 기획서가 본선까지 올라갔다. 상금은 크지 않았다.' }
 ];
 const ENT_EXTRA = [
-  { id:'lesson', label:'연기·보컬 레슨', hint:'실력 · 비용', effects:{ speech:6, fame:3, funds:-5 }, pt:3,
+  { id:'lesson', label:'연기·보컬 레슨', hint:'실력 · 비용', effects:{ speech:8, fame:4, funds:-7 }, pt:3,
     result:'기본기를 다졌다. 레슨비가 만만치 않았다.' },
   { id:'parttime', label:'생활비 아르바이트', hint:'자금 · 체력 소모', effects:{ funds:7, stamina:-4 }, pt:1,
     result:'낮엔 일하고 밤엔 연습했다.' },
@@ -2308,7 +2640,18 @@ const T1_STUDY = {
     { id:'double', label:'복수전공', hint:'넓게 · 고르게', effects:{ policy:5, speech:3, org:3, stamina:-3 }, pt:4,
       result:'두 전공을 오가며 시야가 넓어졌다.' },
     { id:'loose', label:'적당히, 바깥 활동 우선', hint:'연설력·조직력·인지도', effects:{ speech:4, org:4, fame:3, stamina:3 }, pt:2,
-      result:'학점은 평범했지만 아는 사람이 늘었다.' }
+      result:'학점은 평범했지만 아는 사람이 늘었다.' },
+    /* ── 7차 D-2. 돈이 많이 드는 두 길. 형편이 받쳐 줄 때만 열린다 ──
+       '학업 방향'은 남녀가 똑같이 한 번씩 고르는 자리라, 여기에 두어야
+       돈 잠금이 한쪽 성별에만 몰리지 않는다. */
+    { id:'exchange', label:'해외 유학', hint:'정책력 · 연설력 · 큰 비용', needFunds:16,
+      lockLine:'유학 비용을 댈 형편이 아니다.',
+      effects:{ policy:7, speech:6, funds:-14 }, pt:4,
+      result:'낯선 곳에서 말하는 법을 다시 배웠다. 돈은 많이 들었다.' },
+    { id:'grad', label:'대학원 진학', hint:'정책력 크게 · 큰 비용', needFunds:22,
+      lockLine:'대학원 학비를 댈 형편이 아니다.',
+      effects:{ policy:13, speech:3, funds:-18, stamina:-4 }, pt:5,
+      result:'논문을 쓰며 몇 해를 보냈다. 학비는 컸지만 아는 깊이가 달라졌다.' }
   ]
 };
 const T1_ENT_FIELD = {
@@ -2325,7 +2668,8 @@ const T1_ENT_PATH = {
   ent:[
     { id:'agency', label:'기획사 연습생', hint:'인지도 · 체력 소모', effects:{ fame:7, stamina:-6, funds:-2 }, pt:4,
       result:'숙소와 연습실만 오갔다.' },
-    { id:'school', label:'예술대 진학', hint:'실력 · 비용', effects:{ speech:5, policy:4, funds:-5 }, pt:3,
+    /* 방송 진로의 데뷔 경로는 여성이 두 번 고르는 자리이기도 해서 돈 잠금을 걸지 않는다 */
+    { id:'school', label:'예술대 진학', hint:'실력 · 비용', effects:{ speech:7, policy:5, funds:-9 }, pt:3,
       result:'정식으로 배웠다. 학비는 부담이었다.' },
     { id:'audition', label:'오디션 프로그램', hint:'인지도 크게 · 결과의 폭이 큼', effects:{ fame:11, stamina:-3 }, pt:3,
       result:'전국에 얼굴이 한 번 나갔다. 그 다음은 아무도 모른다.' },
@@ -2339,22 +2683,20 @@ const TURN_0 = {
   id:'t0', label:'고교', ageText:'16~19세', title:'고등학교 3년',
   intro:function(s){ return '평범한 일반고 1학년. 정치인이 되겠다는 말은 아직 아무에게도 하지 않았다. 3년 동안 무엇에 시간을 쓸지 두 가지를 고른다.'; },
   event:false, grade:false,
-  /* 계획 화면 — 위에서부터 하나씩 펼쳐진다 */
+  /* ── 7차 B-1. 활동 둘을 먼저 고르고, 고교 3년이 지나간 뒤에 진로를 정한다 ──
+     예전에는 한 화면에서 활동과 진로를 함께 골라, 정치 외길이 열리는 것을 보고
+     활동을 되돌리는 일이 가능했다. 이제 3년이 지나면 활동은 바꿀 수 없다. */
   plan:[
-    { id:'act1', label:'첫 번째 활동', title:'고교 활동 (1/2)', prompt:'3년 동안 가장 많이 한 일은?',
-      options:function(s, p){ return HS_ACTIVITIES.map(function(a){
-        return Object.assign({}, a, { apply:function(st){ st.hsActs.push(a.id); } }); }); } },
-    { id:'act2', label:'두 번째 활동', deps:['act1'], title:'고교 활동 (2/2)', prompt:'그 다음으로 시간을 쓴 일은?',
-      options:function(s, p){ return HS_ACTIVITIES.filter(function(a){ return a.id !== p.act1.id; })
-        .map(function(a){ return Object.assign({}, a, { apply:function(st){ st.hsActs.push(a.id); } }); }); } },
-    { id:'career', label:'진로', deps:['act1','act2'], title:'진로 결정',
-      prompt:'졸업을 앞두고 갈 길을 정한다.', options:careerOptions }
+    { id:'acts', multi:2, label:'고교 활동', title:'고교 3년',
+      prompt:'무엇에 시간을 쓸까? 두 가지를 고른다.',
+      note:function(){ return '두 가지의 무게는 같다. 고른 활동과 이어진 재능을 먼저 알게 된다.'; },
+      options:function(){ return HS_ACTIVITIES; } }
   ],
   /* 타임라인 — 몇 살에 무엇이 일어나는지 */
   timeline:[
-    { age:16, apply:['act1'] },
-    { age:17, apply:['act2'] },
-    { age:18, apply:['career'] },
+    { age:16, apply:['acts'] },
+    { age:17, line:function(s){ return '2학년. 같은 자리에 계속 앉아 있다 보니 그 일이 익숙해졌다.'; } },
+    { age:18, choice:'career' },
     { age:19, line:function(s){ return '졸업식 날, 아무에게도 말하지 않은 목표를 마음속으로 한 번 더 확인했다.'; } }
   ],
   fillers:[ '교실 창밖으로 계절이 세 번 바뀌었다.', '야자 시간에 몰래 신문 정치면을 읽었다.', '친구들과 진로 이야기로 밤을 새웠다.' ],
@@ -3244,6 +3586,17 @@ const TURN_4 = {
    (앞의 결과를 알아야 고를 수 있어서 계획 화면에 넣지 않은 것들)
    ============================================================================ */
 const TIMELINE_CHOICES = {
+  /* 7차 B-1. 진로는 고교 3년이 지나간 뒤에 정한다 (되돌릴 수 없다) */
+  career:{
+    title:'진로 결정',
+    text:function(s){
+      var names = (s.hsActs || []).map(function(id){
+        var a = actById(id); return a ? a.label : '';
+      }).filter(Boolean).join('⁣과 ');
+      return fixJosa('졸업이 코앞이다. 3년 동안 ' + names + '⁣에 시간을 썼다. 이제 갈 길을 정한다.');
+    },
+    options:careerOptions
+  },
   /* 방송 진로 — 앞 턴 흥행 결과를 보고 고른다 */
   entEntry:{
     title:'데뷔 이후',
@@ -3485,6 +3838,7 @@ function runBallot(s){
   /* 6차 E. 메달 판정용 기록 */
   if(won){
     s.flags.everWonElection = true;
+    s.flags.winCount = (s.flags.winCount || 0) + 1;   /* 7차 C-1. 네 번째 별(재선) 판정용 */
     if(s.flags.runHome) s.medalState.wonAtHome = true;
     if(s.medalState.survivedCrisis) s.medalState.wonAfterCrisis = true;
   }
@@ -3670,6 +4024,12 @@ const PREP_ACTIONS = {
       result:'거리에서 사람들과 함께 섰다.' }
   ]
 };
+/* 7차 D-4. 진로를 정하기 전(고교 3년 중)에도 은퇴·엔딩 화면이 열릴 수 있다.
+   그때 CAREERS[s.career] 를 그대로 읽으면 화면이 멈춘다. 한 곳에서 안전하게 읽는다. */
+function careerName(s){
+  var c = s && s.career && CAREERS[s.career];
+  return c ? c.name : '진로 미정';
+}
 /* ---------- 참모 유형 ---------- */
 const AIDES = [
   { id:'policy', label:'정책 전문가', hint:'TV 토론에서 강해진다',
@@ -3983,7 +4343,10 @@ function makeLateTurn(id, label, ages, specialLine){
     intro:function(s){
       var head = specialLine ? specialLine + ' ' : '';
       var pc = s.politicalCareer ? s.politicalCareer.name : '원외 인사';
-      return head + '지금 나는 ' + pc + '이다. 이번 5년을 어떻게 쓸까?';
+      /* '현역 국회의원 (지역구)다'처럼 괄호가 문장 끝에 걸리지 않게 괄호는 뗀다 */
+      pc = pc.replace(/\s*\([^)]*\)\s*$/, '');
+      /* '원외 인사이다'처럼 어색해지지 않게 받침에 맞춰 붙인다 */
+      return head + '지금 나는 ' + pc + josaIDa(pc) + '. 이번 5년을 어떻게 쓸까?';
     },
     event:true, grade:false,
     plan:[
@@ -4450,7 +4813,7 @@ function inaugurationText(s){
 /* 엔딩 종류 — 도감에 모인다 */
 const ENDINGS = {
   /* 당선 */
-  presCareer:{ group:'당선', title:function(s){ return CAREERS[s.career].name + ' 출신 대통령'; },
+  presCareer:{ group:'당선', title:function(s){ return careerName(s) + ' 출신 대통령'; },
     line:'전혀 다른 곳에서 출발해 끝내 그 자리에 섰다.' },
   presComeback:{ group:'당선', title:function(s){ return '역전승 대통령'; },
     line:'밤새 뒤지다 새벽에 뒤집었다. 오래 회자될 개표였다.' },
@@ -4661,7 +5024,9 @@ const RETIRE_ACTIONS = [
   { id:'work', path:'work', label:'본업으로 돌아간다',
     hint:'하던 일이 아직 기다리고 있다', comeback:5,
     effects:{ funds:14, stamina:6, fame:-5 },
-    line:function(s){ return CAREERS[s.career].name + ' 자리로 돌아갔다. 손에 익은 일이었다.'; } },
+    line:function(s){
+      if(!s.career) return '하던 일로 돌아갔다. 손에 익은 일이었다.';
+      return careerName(s) + ' 자리로 돌아갔다. 손에 익은 일이었다.'; } },
   { id:'family', path:'family', label:'가족과 시간을 보낸다',
     hint:'미뤄 둔 자리가 많았다', comeback:2,
     effects:{ stamina:16, integrity:5, fame:-8 },
@@ -5283,7 +5648,10 @@ const EVENTS = [
     { label:'정확히 신고한다', stat:'integrity', dc:58,
       success:{ text:'제대로 처리했다. 나중에 검증이 들어왔을 때 이 기록이 나를 지켰다.', effects:{ integrity:9, policy:4 }, pt:2 },
       fail:{ text:'서류를 잘못 써 가산세를 냈다. 그래도 숨기지는 않았다.', effects:{ integrity:6, funds:-5 }, pt:0 } },
-    { label:'이번만 넘어간다', text:'아무 일도 없었다. 기록은 어딘가 남는다.', effects:{ funds:7, integrity:-7 }, pt:2 }
+    /* 7차 D-1. 뒤탈이 있는 선택은 당장의 이득이 확실히 커야 고를 이유가 생긴다.
+       이득을 키운 만큼 나중에 돌아올 것도 함께 키웠다 (이득은 지금, 위험은 나중). */
+    { label:'이번만 넘어간다', text:'아무 일도 없었다. 기록은 어딘가 남는다.',
+      effects:{ funds:12, integrity:-10 }, pt:2, crisis:{ corruption:10 } }
   ] },
 { turn:'t1', careers:['biz'], title:'상금 사용처',
   text:'경진대회 상금이 들어왔다. 쓸 곳은 많다.',
@@ -5309,7 +5677,8 @@ const EVENTS = [
     { label:'담당자에게 바로 말한다', stat:'integrity', dc:60,
       success:{ text:'실수였고 바로 고쳐졌다. 꼼꼼한 친구로 통하게 됐다.', effects:{ integrity:8, org:5 }, pt:2 },
       fail:{ text:'괜한 참견이라는 말을 들었다. 그래도 장부는 다시 맞춰졌다.', effects:{ integrity:6, org:-3 }, pt:-1 } },
-    { label:'못 본 척한다', text:'조용히 지나갔다. 마음 한구석이 불편했다.', effects:{ org:4, integrity:-5 }, pt:1 }
+    { label:'못 본 척한다', text:'조용히 지나갔다. 마음 한구석이 불편했다.',
+      effects:{ org:9, integrity:-8 }, pt:1, crisis:{ corruption:9 } }
   ] },
 { turn:'t1', careers:['poli'], title:'온라인 설전',
   text:'당 청년 계정 글에 거친 댓글이 달렸다. 답글을 달지 말지는 내 몫이다.',
@@ -5414,7 +5783,8 @@ const EVENTS = [
     { label:'근거를 들어 버틴다', stat:'integrity', dc:63,
       success:{ text:'그대로 나갔다. 사내에서 미움도 샀지만 기자들 사이에서 이름이 섰다.', effects:{ integrity:9, fame:7, org:-3 }, pt:3 },
       fail:{ text:'결국 빠졌다. 대신 그 자료를 잘 보관해 뒀다.', effects:{ integrity:5, policy:4, approval:-2 }, pt:-1 } },
-    { label:'지시를 따르고 다음을 노린다', text:'이번은 접었다. 조직에서 자리는 지켰다.', effects:{ org:7, integrity:-5 }, pt:2 }
+    { label:'지시를 따르고 다음을 노린다', text:'이번은 접었다. 조직에서 자리는 지켰다.',
+      effects:{ org:10, integrity:-8 }, pt:2, crisis:{ corruption:9 } }
   ] },
 { turn:'t2', careers:['media'], title:'단독의 유혹',
   text:'확인되지 않은 제보가 들어왔다. 사실이면 큰 건이다.',
@@ -6143,7 +6513,7 @@ const EVENT_CHAINS = [
       success:{ text:'바로잡혔다. 미움도 같이 샀다.', effects:{ integrity:10, approval:6, org:-5 }, pt:3 },
       fail:{ text:'묻혔다. 대신 이상한 사람이라는 말이 붙었다.', effects:{ integrity:8, org:-7 }, pt:-1 } },
     { label:'못 본 척한다', text:'아무 일도 없었다. 다만 그날이 자꾸 생각난다.',
-      effects:{ org:6, integrity:-5 }, pt:2, crisis:{ corruption:10 } }
+      effects:{ org:10, integrity:-8 }, pt:2, crisis:{ corruption:16 } }
   ] },
 { turn:['t4','late'], careers:'*', chainOf:'sawWrong', title:'서랍 속의 기록',
   text:'그때 적어 둔 일이 결국 터졌다. 내가 그 자리에 있었다는 사실도 함께 알려졌다.',
@@ -6151,7 +6521,7 @@ const EVENT_CHAINS = [
     { label:'기록을 그대로 내놓는다', text:'날짜까지 맞아떨어졌다. 말리지 않은 이유를 묻는 사람도 있었지만, 대체로 용기로 읽혔다.',
       effects:{ integrity:11, approval:8, org:-5 }, pt:4 },
     { label:'조용히 덮는다', text:'덮었다. 서랍은 아직 그대로 있다.',
-      effects:{ org:7, integrity:-8 }, pt:1, crisis:{ corruption:14 }, warn:true }
+      effects:{ org:11, integrity:-11 }, pt:1, crisis:{ corruption:20 }, warn:true }
   ] },
 
 /* ── 6쌍. 처음 맡은 동네 → 평생의 표밭 ────────────────────────────────── */
@@ -6634,7 +7004,7 @@ const EVENTS_MID = [
                 effects:{ integrity:9, policy:6, org:4 }, pt:3 },
       fail:{ text:'책임은 졌다. 자리도 한 칸 밀렸다.', effects:{ integrity:7, org:-5 }, pt:-1 } },
     { label:'조용히 덮고 다음으로 넘어간다', text:'아무도 모르게 지나갔다. 나만 안다.',
-      effects:{ org:5, integrity:-6 }, pt:1, crisis:{ corruption:8 } }
+      effects:{ org:9, integrity:-9 }, pt:1, crisis:{ corruption:13 } }
   ] },
 { turn:'t2', careers:'*', title:'이직 제안',
   text:'조건이 훨씬 좋은 자리를 제안받았다. 지금 팀은 한창 바쁘다.',
@@ -6673,7 +7043,7 @@ const EVENTS_MID = [
     { label:'이름을 올리고 실제로 활동한다', text:'귀찮은 일을 자처했다. 그 단체 사람들이 오래 기억했다.',
       effects:{ org:8, approval:7, stamina:-5 }, pt:3 },
     { label:'이름만 올린다', text:'아무 일도 없었다. 아직은.',
-      effects:{ fame:6, integrity:-5 }, pt:2, fence:true }
+      effects:{ fame:10, funds:5, integrity:-8 }, pt:2, fence:true, crisis:{ corruption:8 } }
   ] },
 { turn:'t3', careers:'*', title:'번아웃',
   text:'몇 년을 쉬지 않고 달렸다. 어느 아침, 일어나기가 어려웠다.',
@@ -6791,7 +7161,8 @@ const EVENTS_C = [
   text:function(s){
     var d = donorOffer(s);
     var hint = donorHintShown(s) ? '\n' + d.hint : '';
-    return d.who + '이 후원을 하겠다고 한다. ' + d.take + hint;
+    /* 후원자 이름은 '지역 개발 사업가', '오래된 후원회'처럼 받침이 제각각이다 */
+    return d.who + josaIGa(d.who) + ' 후원을 하겠다고 한다. ' + d.take + hint;
   },
   options:function(s){
     var d = donorOffer(s);
@@ -7071,7 +7442,7 @@ const EVENTS_C = [
              effects:{ approval:-9, funds:-8 }, pt:-2, crisis:{ corruption:10 } } },
     { label:'필요한 것만 골라 낸다',
       text:'요구받은 것만 냈다. 숨긴 것 아니냐는 말이 따라붙었다.',
-      effects:{ approval:-5, org:4 }, pt:1, crisis:{ corruption:9 } }
+      effects:{ approval:-5, org:9, funds:6, integrity:-7 }, pt:1, crisis:{ corruption:15 } }
   ] },
 { turn:'late', careers:'*', weight:5, title:'씀씀이가 눈에 띈다',
   when:function(s){ return s.stats.funds >= CONFIG.richHeat.full; },
@@ -7222,6 +7593,31 @@ function logHistory(entry){
   return entry;
 }
 /* 능력치 변화 적용. 바뀐 값 목록을 돌려준다. */
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 D-3 — 진로마다 자금과 체력의 폭이 다르다
+   경영·방송은 위아래가 크게 벌어지고, 정치 외길·과학 기술은 폭이 좁다.
+   대신 폭이 좁은 진로는 해마다 돈이 아닌 것을 조금씩 받는다 (아래 careerGift).
+   ══════════════════════════════════════════════════════════════════════════ */
+function careerRangeOf(s){
+  return (s && CONFIG.careerRange[s.career]) ||
+    { fundsMax:CONFIG.statMax, fundsMin:CONFIG.money.debtFloor, staminaMul:1, gift:{} };
+}
+function careerFundsRange(s){
+  var r = careerRangeOf(s);
+  return { max:r.fundsMax, min:r.fundsMin };
+}
+function careerStaminaMul(s){ return careerRangeOf(s).staminaMul || 1; }
+/* 돈이 적은 진로가 대신 받는 것. 한 해에 한 번, 소수점은 확률로 처리한다. */
+function careerGift(s){
+  var g = careerRangeOf(s).gift || {};
+  var out = {};
+  Object.keys(g).forEach(function(k){
+    var v = g[k], n = Math.floor(v);
+    if(Math.random() < (v - n)) n++;
+    if(n > 0) out[k] = n;
+  });
+  return out;
+}
 function applyEffects(s, effects, why){
   var out = [];
   if(!effects) return out;
@@ -7232,9 +7628,14 @@ function applyEffects(s, effects, why){
     if(raw > 0 && ['speech','policy','org','integrity','fame','stamina'].indexOf(k) >= 0){
       raw = Math.max(1, Math.round(raw * growthMul(s, k, raw)));
     }
+    /* 7차 D-3. 체력이 오르내리는 폭은 진로마다 다르다 (방송·경영이 크고, 정치 외길·과기는 좁다) */
+    if(k === 'stamina') raw = Math.round(raw * careerStaminaMul(s));
     var before = s.stats[k];
-    var min = (k === 'funds') ? CONFIG.money.debtFloor : CONFIG.statMin;
-    var after = Math.max(min, Math.min(CONFIG.statMax, before + raw));
+    /* 7차 D-3. 자금이 닿을 수 있는 위·아래 끝도 진로마다 다르다 */
+    var range = careerFundsRange(s);
+    var min = (k === 'funds') ? range.min : CONFIG.statMin;
+    var max = (k === 'funds') ? range.max : CONFIG.statMax;
+    var after = Math.max(min, Math.min(max, before + raw));
     s.stats[k] = after;
     if(after !== before) out.push({ key:k, diff: after - before });
     /* 6차 E. 메달 판정에 쓰는 기록 — 화면에는 아무것도 나오지 않는다 */
@@ -7311,6 +7712,122 @@ function writeSave(score, key, title, group, last5, hallEntry){
     localStorage.setItem(CONFIG.saveKeys.book, JSON.stringify(cur));
   }catch(err){ ok = false; }
   return ok;
+}
+
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 D-5 — 기록을 파일로 내보내고 불러오기
+   로그인과 서버 저장은 하지 않는다 (HTML 파일 하나라는 지금 구조와 부딪힌다).
+   내보내면 엔딩 도감·명예의 전당·설정이 한 파일에 함께 담긴다.
+   불러올 때는 덮어쓰지 않고 합친다 — 지금 가진 기록이 사라지지 않게.
+   저장소를 못 써도 게임은 그대로 돌아간다.
+   ══════════════════════════════════════════════════════════════════════════ */
+const SAVE_FILE = { ver:1, game:'대통령 되기 시뮬레이터' };
+/* 설정은 saveKeys 중 도감·점수를 뺀 나머지 (안내를 봤는지 같은 것) */
+function settingKeys(){
+  return ['feedTip','tips'].filter(function(k){ return CONFIG.saveKeys[k]; });
+}
+function exportSave(){
+  var sv = loadSave();
+  var st = {};
+  settingKeys().forEach(function(k){
+    try{ var v = localStorage.getItem(CONFIG.saveKeys[k]); if(v !== null) st[k] = v; }catch(e){}
+  });
+  return { game:SAVE_FILE.game, ver:SAVE_FILE.ver,
+           savedAt:new Date().toISOString().slice(0, 10),
+           best:sv.best || 0, book:sv.book || {}, hall:sv.hall || [], settings:st };
+}
+function downloadSave(){
+  var data = exportSave();
+  try{
+    var blob = new Blob([JSON.stringify(data, null, 2)], { type:'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '대통령되기_기록_' + data.savedAt + '.json';
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ try{ URL.revokeObjectURL(url); }catch(e){} }, 1000);
+    return { ok:true, count:Object.keys(data.book).length, hall:data.hall.length };
+  }catch(err){ return { ok:false, why:'이 기기에서는 파일로 내보낼 수 없습니다.' }; }
+}
+/* 불러온 것을 지금 기록에 합친다. 무엇이 늘었는지 돌려준다. */
+function mergeSave(data){
+  if(!data || typeof data !== 'object' || !data.book || typeof data.book !== 'object'){
+    return { ok:false, why:'이 게임의 기록 파일이 아닙니다.' };
+  }
+  var cur = loadSave();
+  var addedBook = 0, addedHall = 0;
+  Object.keys(data.book).forEach(function(k){
+    if(!ENDINGS[k]) return;                       /* 모르는 엔딩 키는 무시한다 */
+    if(cur.book[k]) return;                       /* 이미 있는 것은 그대로 둔다 */
+    var e = data.book[k] || {};
+    cur.book[k] = { t:String(e.t || k), g:String(e.g || '기타'),
+                    last5:Array.isArray(e.last5) ? e.last5.slice(0, 5).map(String) : [] };
+    addedBook++;
+  });
+  var seen = {};
+  (cur.hall || []).forEach(function(h){ seen[[h.n, h.a, h.t].join('|')] = true; });
+  (Array.isArray(data.hall) ? data.hall : []).forEach(function(h){
+    if(!h || !h.n) return;
+    var key = [h.n, h.a, h.t].join('|');
+    if(seen[key]) return;
+    seen[key] = true;
+    cur.hall.push({ n:String(h.n), c:String(h.c || ''), a:h.a, t:String(h.t || '') });
+    addedHall++;
+  });
+  cur.hall = cur.hall.slice(0, 10);
+  var bestUp = 0;
+  if(typeof data.best === 'number' && data.best > cur.best){ bestUp = data.best - cur.best; cur.best = data.best; }
+  var ok = true;
+  try{ localStorage.setItem(CONFIG.saveKeys.book, JSON.stringify(cur)); }catch(e){ ok = false; }
+  /* 설정도 함께 옮긴다 */
+  if(data.settings && typeof data.settings === 'object'){
+    settingKeys().forEach(function(k){
+      if(typeof data.settings[k] !== 'string') return;
+      try{ localStorage.setItem(CONFIG.saveKeys[k], data.settings[k]); }catch(e){}
+    });
+  }
+  return { ok:ok, addedBook:addedBook, addedHall:addedHall, bestUp:bestUp,
+           why: ok ? null : '이 기기에서는 저장할 수 없어, 이번 판에만 반영됩니다.' };
+}
+function openSaveFile(){
+  try{
+    var inp = document.createElement('input');
+    inp.type = 'file'; inp.accept = 'application/json,.json';
+    inp.addEventListener('change', function(){
+      var f = inp.files && inp.files[0];
+      if(!f) return;
+      var rd = new FileReader();
+      rd.onload = function(){
+        var res;
+        try{ res = mergeSave(JSON.parse(String(rd.result))); }
+        catch(e){ res = { ok:false, why:'파일을 읽지 못했습니다.' }; }
+        saveNote = res;
+        render();
+      };
+      rd.onerror = function(){ saveNote = { ok:false, why:'파일을 읽지 못했습니다.' }; render(); };
+      rd.readAsText(f);
+    });
+    inp.click();
+  }catch(err){ saveNote = { ok:false, why:'이 기기에서는 파일을 열 수 없습니다.' }; render(); }
+}
+/* 내보내기·불러오기 결과를 한 줄로 알려 준다 */
+var saveNote = null;
+function saveNoteHTML(){
+  if(!saveNote) return '';
+  var n = saveNote, line;
+  if(n.why) line = n.why;
+  else if(n.count !== undefined) line = '기록 ' + n.count + '건을 파일로 내보냈습니다.';
+  else if(!n.addedBook && !n.addedHall && !n.bestUp) line = '새로 더해진 기록이 없습니다.';
+  else {
+    var parts = [];
+    if(n.addedBook) parts.push('엔딩 ' + n.addedBook + '건');
+    if(n.addedHall) parts.push('명예의 전당 ' + n.addedHall + '명');
+    if(n.bestUp) parts.push('최고 점수 갱신');
+    var joined = parts.join(' · ');
+    line = joined + josaEulReul(joined) + ' 더했습니다.';
+  }
+  return '<div class="note savenote">' + esc(line) +
+    '<button class="tipx" data-act="savenoteclose" aria-label="닫기">✕</button></div>';
 }
 
 /* ---------- 게임 상태 ---------- */
@@ -7423,48 +7940,65 @@ function rollTalent(s){
    5차 B — 재능은 살면서 알게 된다
    칸이 열릴 때 나오는 발견 문구. 타고난 값이 평균보다 높은지 낮은지에 따라 다르다.
    ══════════════════════════════════════════════════════════════════════════ */
+/* 7차 C-2. 높음·중간·낮음 셋으로 나눈다. 예전에는 높음과 낮음 둘뿐이라
+   가운데쯤인 재능도 잘났거나 못났다는 말을 들었다. */
 const SCOUT_REVEAL = {
   speech:{
     high:['생각보다 말이 잘 통한다.','내 말에 사람들이 조용해지는 순간이 있었다.',
           '설명을 끝내면 표정이 달라져 있었다.'],
+    mid:['말은 그럭저럭 통하는 편이었다.','준비한 만큼은 말이 나왔다.',
+         '잘할 때도 있고 아닐 때도 있었다.'],
     low:['말로 풀어내는 건 아무래도 내 몫이 아닌 것 같다.','하고 싶은 말은 늘 한 박자 늦게 떠올랐다.',
          '준비한 말이 입에서 자꾸 엉켰다.']
   },
   policy:{
     high:['복잡한 걸 풀어내는 게 남들보다 덜 힘들다.','자료를 오래 들여다봐도 지치지 않았다.',
           '한 번 읽으면 구조가 보였다.'],
+    mid:['시간을 들이면 대개 풀렸다.','남들만큼은 따라갔다.',
+         '두 번 읽으면 눈에 들어왔다.'],
     low:['자료 앞에서는 늘 남보다 시간이 더 걸렸다.','한 번 읽어서는 도무지 머리에 남지 않았다.',
          '깊이 파고드는 일은 나와 잘 맞지 않았다.']
   },
   org:{
     high:['어느새 사람들이 내 쪽을 보고 있었다.','일을 나누는 게 어렵지 않았다.',
           '부탁하면 대체로 들어주는 편이었다.'],
+    mid:['아는 사람은 아는 만큼 도와주었다.','부탁을 하면 되기도 하고 안 되기도 했다.',
+         '사람을 모으는 일이 특별히 어렵지도 쉽지도 않았다.'],
     low:['사람을 움직이는 일은 매번 품이 많이 들었다.','내가 부탁하면 한 번씩 되물어 오곤 했다.',
          '여럿을 한 방향으로 모으는 게 쉽지 않았다.']
   },
   stamina:{
     high:['남들이 지쳐 갈 때도 아직 괜찮았다.','밤을 새워도 다음 날이 멀쩡했다.',
           '오래 서 있는 일이 힘들지 않았다.'],
+    mid:['무리하지만 않으면 괜찮았다.','남들 쉴 때 같이 쉬면 됐다.',
+         '버틸 만큼은 버텼다.'],
     low:['무리한 다음 날은 꼭 표가 났다.','남들보다 먼저 쉬어야 하는 편이었다.',
          '몸이 먼저 신호를 보내는 쪽이었다.']
   },
   fame:{
     high:['처음 보는 사람이 내 이름을 알고 있었다.','어디를 가나 한 번씩 돌아보는 시선이 있었다.',
           '사진 한 장이 생각보다 멀리 갔다.'],
+    mid:['아는 사람들 사이에서는 이름이 돌았다.','한 번 본 사람은 기억해 주는 편이었다.',
+         '알아보는 사람이 가끔 있었다.'],
     low:['같은 자리에 있어도 나를 기억하는 사람은 적었다.','몇 번을 만나야 이름을 외워 주었다.',
          '눈에 띄는 쪽은 늘 다른 사람이었다.']
   }
 };
+/* 그 재능이 높은 쪽인지 가운데인지 낮은 쪽인지 (화면에 수치는 쓰지 않는다) */
+function scoutBand(s, key){
+  var SC = CONFIG.talent.scout, v = (s.scout || {})[key] || 0;
+  if(v >= SC.revealHigh) return 'high';
+  if(v <= SC.revealLow) return 'low';
+  return 'mid';
+}
 /* 칸 하나를 연다. 값은 절대 바꾸지 않고, '알게 됐다'는 사실만 기록한다. */
 function revealScout(s, key){
   if(!s || !s.scout || !s.scoutOpen) return;
   if(CONFIG.talent.scout.keys.indexOf(key) < 0) return;
   if(s.scoutOpen[key]) return;
   s.scoutOpen[key] = true;
-  s.scoutNew = (s.scoutNew || 0) + 1;    /* 6차 A-3: 잠재력 탭에 알림 표시 */
-  var SC = CONFIG.talent.scout;
-  var hi = s.scout[key] >= (SC.total / SC.keys.length);
-  var pool = (SCOUT_REVEAL[key] || {})[hi ? 'high' : 'low'] || [];
+  s.scoutNew = (s.scoutNew || 0) + 1;    /* 6차 A-3: 캐릭터 탭에 알림 표시 */
+  var pool = (SCOUT_REVEAL[key] || {})[scoutBand(s, key)] || [];
   var line = pool.length ? pool[rnd(pool.length - 1)] : '나에 대해 하나 더 알게 됐다.';
   var item = { age:s.curAge || 16, text:line, reveal:true };
   var inPlan = (s.phase === 'intro' || s.phase === 'plan' || s.phase === 'summary');
@@ -7477,7 +8011,7 @@ function revealScout(s, key){
 /* ══════════════════════════════════════════════════════════════════════════
    6.1차 2 — 잠재력 해금 알림
    아래 탭의 작은 점만으로는 놓치기 쉬워서, 화면 가운데에 잠깐 띄운다.
-   열린 능력 이름, 발견 문구, 몇 번째인지를 함께 보여 주고 누르면 잠재력 탭으로 간다.
+   열린 능력 이름, 발견 문구, 몇 번째인지를 함께 보여 주고 누르면 캐릭터 탭으로 간다.
    움직임 줄이기 설정이면 나타나는 애니메이션 없이 그대로 보여 준다.
    ══════════════════════════════════════════════════════════════════════════ */
 var scoutPopTimer = null;
@@ -7611,42 +8145,64 @@ function clearFence(s, reason){
   s.flags.fenceCleared = true;
 }
 
-/* ---------- B-7. 체급 ---------- */
-function tierScore(s){
-  var base = (s.stats.speech + s.stats.policy + s.stats.org + s.stats.fame) / 4;
-  base += s.stats.fame * 0.25 + s.stats.approval * 0.2;
-  var key = s.politicalCareer && s.politicalCareer.key;
-  if(key) base += CONFIG.tier.careerBonus[key] || 0;
-  if((s.flags.presTries || 0) > 0) base += CONFIG.tier.presRunBonus;
-  /* 경계선에 오래 머물면 체급이 깎인다 (40세 이후) */
-  if(s.turnIndex >= 5 && s.fence >= CONFIG.fence.tierDropAt) base -= 12;
-  return base;
-}
-function tierLevel(s){
-  var sc = tierScore(s), cuts = CONFIG.tier.cuts, lv = 1;
-  for(var i = 0; i < cuts.length; i++){ if(sc >= cuts[i]) lv = i + 1; }
-  return lv;
-}
-function tierName(s){ return CONFIG.tier.names[tierLevel(s) - 1]; }
-/* 잠재력 별 — 나이가 들수록 드러난다 */
-/* 5차 B. 잠재력 별은 '열린 칸'만 가지고 만든다.
-   아직 알지 못하는 재능이 별 개수로 미리 드러나면 안 된다.
-   열린 칸 수만큼만 별을 채우고 나머지는 물음표로 둔다. */
-function potentialStars(s){
-  var SC = CONFIG.talent.scout;
-  var keys = SC.keys, opened = [];
-  keys.forEach(function(k){ if(s.scoutOpen && s.scoutOpen[k]) opened.push(s.scout[k]); });
-  var out = '';
-  if(!opened.length) return '?????';
-  var avg = opened.reduce(function(a, b){ return a + b; }, 0) / opened.length;
-  var mid = SC.total / keys.length;           /* 평균값 (=20) */
-  /* 평균보다 얼마나 위인지를 1~5개 별로 */
-  var stars = Math.max(1, Math.min(5, Math.round((avg - mid) / 3.2) + 3));
-  for(var i = 0; i < keys.length; i++){
-    if(i < opened.length) out += (i < stars ? '★' : '☆');
-    else out += '?';
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 C-1 — 별은 타고난 그릇이 아니라 '지금까지 이룬 것'
+   예전에는 별이 잠재력에 묶여 있어 무엇을 해야 오르는지 알 수 없었다.
+   이제 별은 이력이고, 체급 이름은 그 별의 다른 이름일 뿐이다 (둘을 합쳤다).
+   별 0개 = 무명 … 별 5개 = 유력 대권 주자.
+   ══════════════════════════════════════════════════════════════════════════ */
+const CAREER_STARS = [
+  { need:'사회에 자리를 잡는다',
+    done:function(s){ return !!s.career && s.turnIndex >= 2; } },
+  { need:'정치권에 발을 들인다 (입당 · 공직 · 첫 출마)',
+    done:function(s){
+      return !!(s.party || s.politicalCareer ||
+                (s.flags.entry && s.flags.entry !== 'declined') ||
+                (s.flags.race && s.flags.race !== 'none'));
+    } },
+  { need:'선거에서 한 번 이긴다',
+    done:function(s){ return !!s.flags.everWonElection; } },
+  { need:'재선하거나 더 큰 자리로 올라간다',
+    done:function(s){
+      var key = s.politicalCareer && s.politicalCareer.key;
+      return (s.flags.winCount || 0) >= 2 || ['mayor','governor'].indexOf(key) >= 0;
+    } },
+  { need:'대선 후보가 된다 (경선 통과)',
+    done:function(s){ return !!s.flags.wonPrimary; } }
+];
+/* 앞 단계를 밟아야 다음 별이 붙는다 */
+function careerStars(s){
+  var n = 0;
+  for(var i = 0; i < CAREER_STARS.length; i++){
+    if(!CAREER_STARS[i].done(s)) break;
+    n = i + 1;
   }
+  return n;
+}
+/* 체급 = 별 + 1 단계. 이름과 별이 늘 같은 것을 가리킨다. */
+function tierLevel(s){ return careerStars(s) + 1; }
+function tierName(s){ return CONFIG.tier.names[tierLevel(s) - 1]; }
+/* ★★★☆☆ — 색이 아니라 모양으로 읽힌다 */
+function starsText(s){
+  var n = careerStars(s), out = '';
+  for(var i = 0; i < CAREER_STARS.length; i++) out += (i < n ? '★' : '☆');
   return out;
+}
+/* 다음 별에 무엇이 필요한지 한 줄 */
+function nextStarLine(s){
+  var n = careerStars(s);
+  if(n >= CAREER_STARS.length) return '더 오를 곳이 없다.';
+  return '다음 ★ — ' + CAREER_STARS[n].need;
+}
+/* 7차 C-2. 잠재력은 별이 아니라 '몇 개를 알게 됐는지'로 보여 준다 */
+function talentFound(s){
+  var keys = CONFIG.talent.scout.keys, n = 0;
+  keys.forEach(function(k){ if(s.scoutOpen && s.scoutOpen[k]) n++; });
+  return { found:n, total:keys.length };
+}
+function talentFoundText(s){
+  var t = talentFound(s);
+  return '재능 ' + t.found + '/' + t.total + ' 발견';
 }
 
 /* ---------- B-3. 한 해의 자금 정산 ---------- */
@@ -7682,7 +8238,14 @@ function settleYear(s){
   cost += upkeepFor(s);
 
   var net = income - cost;
-  s.stats.funds = Math.max(M.debtFloor, Math.min(CONFIG.statMax, s.stats.funds + net));
+  /* 7차 D-3. 자금이 닿을 수 있는 위·아래 끝은 진로마다 다르다 */
+  var fr = careerFundsRange(s);
+  s.stats.funds = Math.max(fr.min, Math.min(fr.max, s.stats.funds + net));
+
+  /* 7차 D-3. 돈이 적은 진로는 해마다 돈이 아닌 것을 조금씩 받는다.
+     그래서 전체로 보면 어느 진로도 불리하지 않다 (설계 9번). */
+  var gift = careerGift(s);
+  if(Object.keys(gift).length) applyEffects(s, gift);
 
   /* 자금이 바닥이면 파산 위기가 쌓이고, 넉넉하면 조금 가라앉는다 */
   if(s.stats.funds < M.troubleBelow) addCrisis(s, 'bankrupt', CONFIG.crisis.bankruptPerDebt);
@@ -8261,6 +8824,167 @@ const FIG_SPOT = {
   camp:     { x:212, y:16, k:0.80 },                     /* 책상 앞 */
   tally:    { x:206, y:18, k:0.76 }                      /* 화면을 보며 서 있음 */
 };
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 A-4 — 20~35세는 진로마다 다른 공간에서 지낸다
+   진로가 다르면 다른 곳에 있고, 시간이 지나면 그 공간이 채워진다.
+   · 물건 개수 = 체급 (화면에 이미 보이는 값이다. 숨긴 등급과는 잇지 않는다)
+   · 방의 또렷함 = 시기 (턴이 지날수록 뿌연 막이 걷힌다)
+   여섯 방의 자리 배치는 같다. 왼쪽이 그 진로를 말해 주는 구조물,
+   가운데가 바닥 물건, 오른쪽 벽이 상장과 사진, 그 사이에 사람이 선다.
+   ══════════════════════════════════════════════════════════════════════════ */
+const ROOM_WALL  = '<rect width="320" height="120" fill="#eef0f7"/>';
+const ROOM_FLOOR = '<rect x="0" y="92" width="320" height="28" fill="#e3e7f0"/>';
+/* 다섯째·여섯째 물건은 어느 방에서나 같다 — 벽에 걸리는 상장과 사진 */
+const ROOM_AWARD = '<rect x="274" y="16" width="36" height="27" rx="2" fill="#f4f6fb" stroke="#c9d0e1" stroke-width="1.5"/>' +
+  '<path d="M281 27 h22 M281 34 h13" stroke="#ccd3e3" stroke-width="2.5" stroke-linecap="round"/>';
+const ROOM_PHOTO = '<rect x="274" y="49" width="36" height="26" rx="2" fill="#e8ecf6" stroke="#c9d0e1" stroke-width="1.5"/>' +
+  '<circle cx="292" cy="59" r="4.5" fill="#c6cddf"/>' +
+  '<path d="M283 71 a9 9 0 0 1 18 0z" fill="#c6cddf"/>';
+/* 책상은 사람 앞을 가려야 '책상 앞에 선 것'으로 보인다 (BG_FRONT 로 나간다) */
+const ROOM_DESK = '<rect x="180" y="74" width="82" height="7" rx="2" fill="#c8cede"/>' +
+  '<path d="M188 81 v16 M254 81 v16" stroke="#c8cede" stroke-width="4"/>';
+
+const ROOMS = {
+  /* 법조 — 책장 가득한 서고와 법전 */
+  law:{
+    base:function(){
+      return '<rect x="14" y="12" width="152" height="80" rx="2" fill="#e5e9f3" stroke="#d2d8e6" stroke-width="2"/>' +
+        '<path d="M14 38 h152 M14 65 h152" stroke="#d2d8e6" stroke-width="2"/>';
+    },
+    items:[
+      '<g fill="#c3cadc"><rect x="21" y="17" width="7" height="20"/><rect x="30" y="19" width="5" height="18"/>' +
+        '<rect x="37" y="16" width="7" height="21"/></g>',
+      '<g fill="#ccd2e3"><rect x="50" y="18" width="6" height="19"/><rect x="58" y="16" width="7" height="21"/>' +
+        '<rect x="67" y="20" width="5" height="17"/><rect x="74" y="17" width="6" height="20"/></g>',
+      '<g fill="#c3cadc"><rect x="21" y="44" width="7" height="20"/><rect x="30" y="46" width="5" height="18"/>' +
+        '<rect x="37" y="43" width="6" height="21"/><rect x="45" y="45" width="5" height="19"/></g>',
+      /* 받침대 위의 법전 */
+      '<g><rect x="186" y="58" width="28" height="9" rx="1" fill="#b6bed3"/>' +
+        '<path d="M186 58 l14-7 14 7z" fill="#c9d0e1"/></g>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  },
+  /* 과학 기술 — 화이트보드의 수식과 실험대 */
+  sci:{
+    base:function(){
+      return '<rect x="16" y="13" width="148" height="66" rx="3" fill="#f4f6fb" stroke="#ced5e4" stroke-width="2"/>' +
+        '<rect x="16" y="79" width="148" height="5" rx="2" fill="#dde3ef"/>';
+    },
+    items:[
+      '<path d="M28 29 h46" stroke="#c6cddf" stroke-width="3.5" stroke-linecap="round"/>',
+      '<path d="M28 42 h72 M28 53 h42" stroke="#ccd3e3" stroke-width="3" stroke-linecap="round"/>',
+      /* 그래프 한 줄 */
+      '<path d="M96 68 l16-15 11 9 17-21" fill="none" stroke="#bcc4d9" stroke-width="2.5" stroke-linecap="round"/>',
+      /* 플라스크 */
+      '<path d="M183 86 l10-19 v-9 h11 v9 l10 19z" fill="#d6dce9" stroke="#c2cadb" stroke-width="1.5"/>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  },
+  /* 언론 — 편집국, 벽에 걸린 시계 여러 개 */
+  media:{
+    base:function(){
+      return '<rect x="12" y="12" width="156" height="50" rx="2" fill="#e9ecf6" stroke="#d2d8e6" stroke-width="2"/>';
+    },
+    items:[
+      '<g><circle cx="38" cy="37" r="13" fill="#f2f4fa" stroke="#c9d0e1" stroke-width="2"/>' +
+        '<path d="M38 37 v-7 M38 37 h5" stroke="#aeb6ca" stroke-width="2" stroke-linecap="round"/></g>',
+      '<g><circle cx="75" cy="37" r="13" fill="#f2f4fa" stroke="#c9d0e1" stroke-width="2"/>' +
+        '<path d="M75 37 v-8 M75 37 l-5 4" stroke="#aeb6ca" stroke-width="2" stroke-linecap="round"/></g>',
+      '<g><circle cx="112" cy="37" r="13" fill="#f2f4fa" stroke="#c9d0e1" stroke-width="2"/>' +
+        '<path d="M112 37 v-6 M112 37 l6 3" stroke="#aeb6ca" stroke-width="2" stroke-linecap="round"/></g>',
+      /* 쌓아 둔 신문 */
+      '<g fill="#cdd4e5"><rect x="180" y="82" width="36" height="5" rx="1"/>' +
+        '<rect x="183" y="76" width="30" height="5" rx="1"/><rect x="186" y="70" width="24" height="5" rx="1"/></g>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  },
+  /* 방송 — 처음엔 오디션 대기실, 자리를 잡으면 전구 달린 거울 앞 대기실 */
+  ent:{
+    base:function(s){
+      if(s && s.turnIndex <= 1){
+        /* 오디션 대기실 — 복도에 놓인 빈 의자 줄 */
+        return '<rect x="10" y="58" width="152" height="8" rx="2" fill="#d7dce9"/>' +
+          '<path d="M18 66 v26 M52 66 v26 M86 66 v26 M120 66 v26 M154 66 v26" stroke="#d7dce9" stroke-width="4"/>' +
+          '<path d="M14 58 v-14 M48 58 v-14 M82 58 v-14 M116 58 v-14 M150 58 v-14" stroke="#e0e5f0" stroke-width="7"/>';
+      }
+      /* 거울과 가장자리 전구 */
+      var g = '<rect x="18" y="12" width="140" height="78" rx="3" fill="#e9ecf6" stroke="#d2d8e6" stroke-width="2"/>';
+      for(var i = 0; i < 6; i++) g += '<circle cx="' + (30 + i * 23) + '" cy="6" r="4.5" fill="#dfe4f0"/>';
+      for(var j = 0; j < 4; j++) g += '<circle cx="10" cy="' + (22 + j * 21) + '" r="4.5" fill="#dfe4f0"/>';
+      return g;
+    },
+    items:[
+      '<rect x="30" y="26" width="46" height="8" rx="3" fill="#d5dbe9"/>',
+      '<g fill="#cdd4e5"><rect x="30" y="44" width="20" height="20" rx="3"/><rect x="56" y="48" width="14" height="16" rx="3"/></g>',
+      '<path d="M100 30 v40 M92 70 h16" stroke="#cdd4e5" stroke-width="4" stroke-linecap="round"/>',
+      /* 옷걸이에 걸린 무대 의상 */
+      '<g><path d="M176 52 h44" stroke="#c6cddf" stroke-width="2.5"/>' +
+        '<path d="M190 56 l8-4 8 4 4 30 h-24z" fill="#d6dce9" stroke="#c2cadb" stroke-width="1.5"/></g>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  },
+  /* 경영 — 창업 사무실, 상자와 화이트보드 */
+  biz:{
+    base:function(){
+      return '<rect x="14" y="12" width="128" height="58" rx="3" fill="#f4f6fb" stroke="#ced5e4" stroke-width="2"/>' +
+        '<rect x="14" y="70" width="128" height="5" rx="2" fill="#dde3ef"/>';
+    },
+    items:[
+      '<g fill="#d9dfec" stroke="#c6cddf" stroke-width="1.5"><rect x="20" y="76" width="28" height="16" rx="1"/></g>' +
+        '<path d="M34 76 v16" stroke="#c6cddf" stroke-width="1.5"/>',
+      '<g fill="#d9dfec" stroke="#c6cddf" stroke-width="1.5"><rect x="54" y="72" width="26" height="20" rx="1"/>' +
+        '<rect x="86" y="80" width="22" height="12" rx="1"/></g>',
+      '<path d="M26 28 h40 M26 40 h62 M26 51 h34" stroke="#ccd3e3" stroke-width="3" stroke-linecap="round"/>',
+      /* 오른쪽으로 오르는 꺾은선 */
+      '<path d="M96 56 l14-12 10 7 16-17" fill="none" stroke="#bcc4d9" stroke-width="2.5" stroke-linecap="round"/>' +
+        '<path d="M178 88 h40 M178 88 v-26" stroke="#c6cddf" stroke-width="2.5"/>' +
+        '<path d="M182 82 l10-9 8 6 12-14" fill="none" stroke="#bcc4d9" stroke-width="2.5" stroke-linecap="round"/>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  },
+  /* 정치 외길 — 의원회관 복도와 당사 사무실 */
+  poli:{
+    base:function(){
+      return '<rect x="0" y="0" width="320" height="92" fill="#eceff7"/>' +
+        /* 복도 — 늘어선 문 */
+        '<g fill="#e2e7f2" stroke="#d2d8e6" stroke-width="2">' +
+        '<rect x="16" y="24" width="38" height="68" rx="2"/><rect x="64" y="24" width="38" height="68" rx="2"/>' +
+        '<rect x="112" y="24" width="38" height="68" rx="2"/></g>' +
+        '<path d="M0 22 h168" stroke="#d2d8e6" stroke-width="2"/>';
+    },
+    items:[
+      '<g fill="#c6cddf"><circle cx="48" cy="60" r="3"/></g>' +
+        '<rect x="22" y="30" width="26" height="9" rx="1" fill="#f2f4fa" stroke="#ccd3e3" stroke-width="1.5"/>',
+      '<g fill="#c6cddf"><circle cx="96" cy="60" r="3"/></g>' +
+        '<rect x="70" y="30" width="26" height="9" rx="1" fill="#f2f4fa" stroke="#ccd3e3" stroke-width="1.5"/>',
+      '<g fill="#c6cddf"><circle cx="144" cy="60" r="3"/></g>' +
+        '<rect x="118" y="30" width="26" height="9" rx="1" fill="#f2f4fa" stroke="#ccd3e3" stroke-width="1.5"/>',
+      /* 당사 현수막 */
+      '<rect x="174" y="16" width="52" height="30" rx="2" fill="#dfe4f1" stroke="#c9d0e1" stroke-width="1.5"/>' +
+        '<path d="M182 28 h36 M182 37 h22" stroke="#c3cadb" stroke-width="3" stroke-linecap="round"/>',
+      ROOM_AWARD, ROOM_PHOTO
+    ]
+  }
+};
+/* 물건 개수는 체급이 정한다 (1~6) */
+function roomItemCount(s){ return Math.max(1, Math.min(6, s ? tierLevel(s) : 1)); }
+/* 시기가 이를수록 방 위에 뿌연 막이 한 겹 덮인다 */
+function roomWash(s){
+  var ti = s ? s.turnIndex : 1;
+  var o = (ti <= 1) ? 0.44 : (ti === 2 ? 0.2 : 0);
+  return o > 0 ? '<rect width="320" height="120" fill="#f2f3f9" opacity="' + o + '"/>' : '';
+}
+Object.keys(ROOMS).forEach(function(k){
+  var r = ROOMS[k], key = 'room_' + k;
+  BG[key] = function(s){
+    var n = roomItemCount(s);
+    return ROOM_WALL + ROOM_FLOOR + r.base(s) + r.items.slice(0, n).join('') + roomWash(s);
+  };
+  /* 책상은 물건이 셋을 넘을 때부터 놓인다 (설계 A-4의 '책상이 생긴다') */
+  BG_FRONT[key] = function(s){ return roomItemCount(s) >= 3 ? ROOM_DESK : ''; };
+  FIG_SPOT[key] = { x:218, y:14, k:0.80 };
+});
+
 function bgSVG(kind, s, posture){
   var fn = BG[kind] || BG.window;
   var spot = FIG_SPOT[kind] || FIG_SPOT.window;
@@ -8569,8 +9293,9 @@ function inBarracks(s){
 function bgForTurn(s){
   var ti = s.turnIndex;
   if(ti === 0) return 'classroom';
-  if(ti === 1) return (s.career === 'ent') ? 'spotlight' : (inBarracks(s) ? 'parade' : 'campus');
-  if(ti <= 3) return 'window';
+  if(ti === 1 && inBarracks(s)) return 'parade';      /* 병역을 치르는 해만 연병장 */
+  /* 7차 A-4. 20~35세는 진로별 공간 */
+  if(ti >= 1 && ti <= 3) return ROOMS[s.career] ? ('room_' + s.career) : 'campus';
   return 'camp';
 }
 /* ══════════════════════════════════════════════════════════════════════════
@@ -8799,10 +9524,36 @@ function clearDependents(stepId){
     if(st.id !== stepId && dirty[st.id] && S.planPicks[st.id]){
       cleared.push(val(st.label, S) || val(st.title, S));
       delete S.planPicks[st.id];
+      if(S.planMulti) delete S.planMulti[st.id];
     }
   });
   delete S.planPicks[stepId];
+  if(S.planMulti) delete S.planMulti[stepId];   /* 7차 B-1. 동시 선택도 함께 비운다 */
   return cleared;
+}
+/* ── 7차 B-1. 여러 개를 동시에 고르는 단계 ── */
+function togglePlanMulti(stepId, idx){
+  var st = planSteps().filter(function(x){ return x.id === stepId; })[0];
+  if(!st || !st.multi || S.planLocked) return;
+  var opts = st.options(S, S.planPicks) || [];
+  var o = opts[idx];
+  if(!o) return;
+  S.planMulti = S.planMulti || {};
+  var list = S.planMulti[stepId] = S.planMulti[stepId] || [];
+  var at = list.indexOf(o.id);
+  if(at >= 0) list.splice(at, 1);
+  else if(list.length < st.multi) list.push(o.id);
+  render();
+}
+function finishPlanMulti(stepId){
+  var st = planSteps().filter(function(x){ return x.id === stepId; })[0];
+  if(!st || !st.multi) return;
+  var list = (S.planMulti && S.planMulti[stepId]) || [];
+  if(list.length !== st.multi) return;
+  S.planPicks[stepId] = (st.combine || combineActs)(list);
+  S.recheckNote = null;
+  planScrollTarget = stepId;
+  render();
 }
 function pickPlanOption(stepId, idx){
   var st = planSteps().filter(function(x){ return x.id === stepId; })[0];
@@ -8849,13 +9600,13 @@ function reopenPlanStep(stepId){
 function confirmPlan(){
   if(!planComplete()) return;
   S.planLocked = true;
-  /* 5차 B-2. 고교 활동 두 개를 고르고 나면 그와 연결된 칸이 먼저 열린다.
+  /* 5차 B-2 · 7차 B-2. 고교 활동 두 개를 고르고 나면 그와 이어진 재능이 먼저 열린다.
      활동은 '어느 칸이 먼저 열리는지'만 정한다. 재능 값은 이미 정해져 있어 바뀌지 않는다. */
   if(S.turnIndex === 0){
-    var link = CONFIG.talent.scout.actLink;
-    ['act1','act2'].forEach(function(id){
-      var p = S.planPicks[id];
-      if(p && link[p.id]) revealScout(S, link[p.id]);
+    var acts = S.planPicks.acts;
+    ((acts && acts.ids) || []).forEach(function(id){
+      var a = actById(id);
+      if(a && a.talent) revealScout(S, a.talent);
     });
   }
   startTimeline();
@@ -9112,6 +9863,13 @@ function openCrisis(path){
   var def = CRISIS_EVENTS[path], C = CONFIG.crisis;
   /* 조건이 맞지 않는 선택지는 뺀다 (예: 가족 도움은 집안이 넉넉할 때만) */
   var list = def.options.filter(function(o){ return !o.needRich || S.background === 'rich'; });
+  /* 7차 D-1. 돈으로 넘기는 길은 그만한 돈이 있을 때만,
+     몸으로 밀어붙이는 길은 몸이 버틸 때만 나온다 */
+  list = list.filter(function(o){
+    if(o.needFunds && S.stats.funds < o.needFunds) return false;
+    if(o.pushBody && S.stats.stamina < CONFIG.trade.bodyMinStamina) return false;
+    return true;
+  });
   /* 6차 B-1. 판정 없는 선택은 한 판에 한 번만 */
   S.usedNoRoll = S.usedNoRoll || {};
   if(C.noRollOncePerGame) list = list.filter(function(o){ return !(o.noRoll && S.usedNoRoll[o.label]); });
@@ -9159,14 +9917,20 @@ function chooseCrisisOption(idx){
     var dc = opt.dc + (S.crisisTries[path] > 1 ? C.secondTryPenalty : 0) + depth;
     revealScout(S, opt.stat);        /* 5차 B-2: 그 능력을 처음 크게 쓰는 순간 */
     var range = CONFIG.eventRandomRange;
+    /* 7차 D-1. 몸을 쓰면 판정에 보탬이 된다. 대신 체력이 그만큼 빠진다. */
+    var help = 0;
+    if(opt.pushBody){
+      help = CONFIG.trade.bodyBonus;
+      applyEffects(S, { stamina:-CONFIG.trade.bodyCost });
+    }
     /* 무작위 폭 안에서의 실제 성공 확률 */
-    var p = (S.stats[opt.stat] + range - dc + 1) / (range + 1);
+    var p = (S.stats[opt.stat] + help + range - dc + 1) / (range + 1);
     p = Math.max(0, Math.min(1, p));
     if(p > C.maxSuccess){
       /* 능력치가 아무리 높아도 상한을 넘지 못한다 (6차 B-1) */
       ok = Math.random() < C.maxSuccess;
     } else {
-      ok = (S.stats[opt.stat] + rnd(range)) >= dc;
+      ok = (S.stats[opt.stat] + help + rnd(range)) >= dc;
     }
     out = ok ? opt.success : opt.fail;
   }
@@ -9221,7 +9985,13 @@ function chooseEventOption(opt){
   var ev = S.currentEvent, out;
   if(opt.stat){
     revealScout(S, opt.stat);        /* 5차 B-2: 그 능력을 처음 크게 쓰는 순간 */
-    var roll = S.stats[opt.stat] + rnd(CONFIG.eventRandomRange);
+    /* 7차 D-1. 몸을 쓰면 판정에 보탬이 된다 */
+    var help = 0;
+    if(opt.pushBody){
+      help = CONFIG.trade.bodyBonus;
+      applyEffects(S, { stamina:-CONFIG.trade.bodyCost });
+    }
+    var roll = S.stats[opt.stat] + help + rnd(CONFIG.eventRandomRange);
     out = (roll >= opt.dc) ? opt.success : opt.fail;
   } else { out = opt; }
   var deltas = applyEffects(S, out.effects);
@@ -9519,6 +10289,7 @@ function runPresBallot(){
   /* 6차 E. 메달 판정용 기록 */
   if(won){
     S.flags.everWonElection = true;
+    S.flags.winCount = (S.flags.winCount || 0) + 1;   /* 7차 C-1 */
     if(S.flags.runHome) S.medalState.wonAtHome = true;
     if(S.medalState.survivedCrisis) S.medalState.wonAfterCrisis = true;
   }
@@ -9781,6 +10552,16 @@ function retireNow(reason){
                label: reason || '스스로 물러났다' });
   startRetireLife();
 }
+/* 7차 D-4. 진로를 정하기 전에는 '은퇴'가 성립하지 않는다 */
+function canRetire(s){ return !!(s && s.career); }
+/* 지금 나이. 계획 화면처럼 curAge 가 아직 없을 때는 이번 턴의 시작 나이를 쓴다.
+   (예전에는 40세로 고정돼, 스무 살에 은퇴하면 '은퇴 후 · 40세'로 찍혔다) */
+function ageNow(s){
+  if(s.curAge) return s.curAge;
+  var t = TURNS[Math.min(s.turnIndex, TURNS.length - 1)];
+  var m = String(val(t.ageText, s) || '').match(/\d+/);
+  return m ? parseInt(m[0], 10) : CONFIG.lifespan.lateFrom;
+}
 /* 은퇴 후 짧은 타임라인을 연다 (5년 또는 10년, 선택은 두 번 또는 세 번) */
 function startRetireLife(){
   var long = Math.random() < 0.5;
@@ -9788,7 +10569,7 @@ function startRetireLife(){
     step:0,
     total: long ? 3 : 2,            /* 두세 번 고른다 */
     years: long ? 10 : 5,
-    age: (S.curAge || CONFIG.lifespan.lateFrom),
+    age: ageNow(S),
     lines:[{ text:RETIRE_TEXT.open }],
     back:0,
     picks:[]
@@ -9899,7 +10680,7 @@ function finishGame(){
     return (h.age ? h.age + '세 ' : '') + h.label;
   });
   var hall = S.flags.electedPresident
-    ? { n:S.name, c:CAREERS[S.career].name, a:(S.flags.wonAtAge || S.curAge), t:S.endingTitle }
+    ? { n:S.name, c:careerName(S), a:(S.flags.wonAtAge || S.curAge), t:S.endingTitle }
     : null;
   S.saveOk = writeSave(S.finalScore, S.endingKey, S.endingTitle, e.group, last5, hall);
   S.saveData = loadSave();
@@ -10033,7 +10814,7 @@ function fundsBarHTML(s){
     crisisIconFor('funds') + '</div>';
 }
 function hudHTML(){
-  var careerName = S.career ? CAREERS[S.career].name : '진로 미정';
+  var cname = careerName(S);
   var t = TURNS[Math.min(S.turnIndex, TURNS.length - 1)];
   var age = (S.screen === 'result') ? ((S.curAge || CONFIG.lifespan.maxAge) + '세 시점')
                                     : (S.curAge ? S.curAge + '세' : val(t.ageText, S));
@@ -10057,11 +10838,12 @@ function hudHTML(){
   /* 윗줄 — 이름·나이·진로, 정당, 체급, 여론, 메뉴 */
   var top = '<div class="hudtop">' +
     '<div class="hwho"><b>' + esc(S.name) + '</b> · ' + (S.gender === 'male' ? '남' : '여') +
-      ' · ' + age + ' · ' + careerName + '</div>' +
+      ' · ' + age + ' · ' + esc(cname) + '</div>' +
     (party ? '<span class="partytag" style="background:' + party.color + '">' + party.name + '</span>' : '') +
-    /* 체급·잠재력 칩을 누르면 캐릭터 탭으로 간다 (6차 A-3) */
+    /* 체급·별 칩을 누르면 캐릭터 탭으로 간다 (6차 A-3).
+       7차 C-1. 체급 이름과 별은 같은 것을 가리키므로 한 덩어리로 보여 준다 */
     '<button class="htier" data-act="totab" data-v="talent" aria-label="캐릭터 보기">' +
-      esc(tierName(S)) + ' <i>' + potentialStars(S) + '</i></button>' +
+      esc(tierName(S)) + ' <i>' + starsText(S) + '</i></button>' +
     '<button class="hbtn menu" data-act="menu" aria-label="메뉴">≡</button>' +
     '</div>';
 
@@ -10163,14 +10945,25 @@ function viewChild(){
       '<button class="btn" data-act="childgo">고등학교로</button>' +
     '</div>';
 }
-/* ── 잠재력 탭 ── */
+/* ── 캐릭터 탭 (별·체급, 잠재력 표, 고향·가족·라이벌, 타고난 특성) ── */
 function viewTalentTab(){
   return '<div class="card">' +
     '<div class="kicker">캐릭터</div><h3>' + esc(S.name) + josaEunNeun(S.name) + ' 어떤 사람인가</h3>' +
+    /* ── 7차 C-1. 체급과 별은 하나다. 다음 별에 무엇이 필요한지 함께 적는다 ── */
+    '<div class="starbox">' +
+      '<div class="sbt"><b>' + esc(tierName(S)) + '</b><span class="stars">' + starsText(S) + '</span></div>' +
+      '<div class="sbn">' + esc(nextStarLine(S)) + '</div>' +
+      '<ol class="steps">' + CAREER_STARS.map(function(d, i){
+        var got = i < careerStars(S);
+        return '<li class="' + (got ? 'got' : '') + '">' +
+          '<span class="sm">' + (got ? '★' : '☆') + '</span>' + esc(d.need) + '</li>';
+      }).join('') + '</ol>' +
+    '</div>' +
+    /* 7차 C-2. 잠재력은 별이 아니라 몇 개를 알게 됐는지로 */
+    '<div class="divider"></div>' +
+    '<div class="kicker">잠재력 · ' + esc(talentFoundText(S)) + '</div>' +
     scoutHTML(S, true) +
     '<div class="divider"></div>' +
-    '<div class="rowline"><span class="k">체급</span><span class="v">' + esc(tierName(S)) + '</span></div>' +
-    '<div class="rowline"><span class="k">영향력</span><span class="v stars">' + potentialStars(S) + '</span></div>' +
     /* 6차 C-5 · C-6. 고향과 가족 구성을 한 줄씩 (숫자는 쓰지 않는다) */
     '<div class="rowline"><span class="k">고향</span><span class="v">' + esc(regionName(S)) +
       (regionType(S) ? ' <i class="rt">' + esc(regionType(S).name) + '</i>' : '') + '</span></div>' +
@@ -10236,6 +11029,15 @@ function menuHTML(){
         '<span class="v">' + (tipsAllSeen() ? '모두 봄' : '보는 중') + '</span></div>' +
       '<button class="btn ghost" data-act="tipreset">안내 다시 켜기</button>' +
       '<p class="desc">움직임 줄이기는 기기 설정을 따릅니다. 켜 두면 애니메이션 없이 정지 화면으로 보여 줍니다.</p>' +
+      /* 7차 D-5. 엔딩 도감·명예의 전당·설정을 한 파일로 옮긴다 */
+      '<div class="divider"></div>' +
+      '<div class="kicker">기록 옮기기</div>' +
+      '<p class="desc">엔딩 도감과 명예의 전당, 설정을 파일 하나로 내보내고 다른 기기에서 불러올 수 있습니다. 불러오면 지금 기록에 더해집니다.</p>' +
+      '<div class="filerow">' +
+        '<button class="btn ghost" data-act="saveout">내보내기</button>' +
+        '<button class="btn ghost" data-act="savein">불러오기</button>' +
+      '</div>' +
+      saveNoteHTML() +
       '<button class="btn" data-act="menuclose">닫기</button></div>';
   }
   /* 6차 A-3. 설명서 — 설명 카드를 판 도중에도 다시 본다 */
@@ -10257,7 +11059,9 @@ function menuHTML(){
   return '<div class="sheetbg" data-act="menuclose"></div><div class="sheet">' +
     '<h3>메뉴</h3>' +
     '<button class="btn ghost" data-act="askhome">홈으로</button>' +
-    '<button class="btn ghost" data-act="askretire">은퇴하기</button>' +
+    /* 7차 D-4. 아직 진로도 정하지 않은 고교 시절에는 '은퇴'라는 말이 성립하지 않는다.
+       진로가 정해진 뒤부터 보여 준다. */
+    (canRetire(S) ? '<button class="btn ghost" data-act="askretire">은퇴하기</button>' : '') +
     '<button class="btn ghost" data-act="asksettings">설정</button>' +
     '<button class="btn ghost" data-act="askhowto">설명서</button>' +
     '<button class="btn" data-act="menuclose">닫기</button></div>';
@@ -10329,6 +11133,15 @@ function silhouetteMark(){
 const TITLE_TEXT = {
   name:'대통령 되기<br>시뮬레이터',
   intro:'당신도 대통령이 될 수 있습니다.<br>열일곱의 교실에서 시작해, 대통령의 자리까지'
+};
+/* 7차 A-2. 홈 화면의 공문서 말투 */
+const DOC_TEXT = {
+  no:'제 1 호',
+  dept:'인생기록관',
+  stampMark:'記',
+  stampMax:10,                 /* 도장은 이만큼까지만 찍는다 (휴대폰에서 한 줄에 들어가는 수) */
+  recorded:function(n){ return '등록된 기록 ' + n + '건'; },
+  best:function(n){ return '최고 점수 ' + n; }
 };
 
 /* 설명 카드 4장 — 그림 하나와 두세 줄 글 */
@@ -10483,19 +11296,37 @@ function tipHTML(){
 }
 
 var titleBook = false;    /* 시작 화면에서 엔딩 도감을 펼쳤는지 */
+/* 7차 A-2. 홈은 공문서처럼. 도장은 모아 놓은 엔딩 수만큼 찍힌다. */
+function stampsHTML(n){
+  if(!n) return '<div class="stamps"></div>';
+  var shown = Math.min(n, DOC_TEXT.stampMax), h = '';
+  for(var i = 0; i < shown; i++) h += '<span class="sm" aria-hidden="true">' + DOC_TEXT.stampMark + '</span>';
+  return '<div class="stamps" title="' + DOC_TEXT.recorded(n) + '">' + h + '</div>';
+}
 function viewTitle(){
   var sv = loadSave();
-  return '<div style="height:26px"></div>' +
-    '<div class="card center titlecard">' +
-      '<div class="kicker">커리어 시뮬레이션</div>' +
+  var seen = Object.keys(sv.book || {}).length;
+  return '<div style="height:20px"></div>' +
+    '<div class="card center titlecard doccard">' +
+      '<div class="docno">' + DOC_TEXT.no + '<b>' + DOC_TEXT.dept + '</b></div>' +
       '<h1 class="bigtitle">' + TITLE_TEXT.name + '</h1>' +
       '<p class="lead">' + TITLE_TEXT.intro + '</p>' +
-      '<div class="divider"></div>' +
-      '<div class="rowline"><span class="k">최고 점수</span><span class="v">' + sv.best + '</span></div>' +
-      '<button class="btn" data-act="tocreate">시작하기</button>' +
-      '<button class="btn ghost" data-act="tohowto">어떻게 하나요</button>' +
-      '<button class="btn ghost" data-act="togglebook" aria-expanded="' + (titleBook ? 'true' : 'false') + '">' +
-        '엔딩 도감' + (titleBook ? ' 닫기' : '') + '</button>' +
+      /* 결재란처럼 네모 칸 셋을 나란히 */
+      '<div class="approve">' +
+        '<button data-act="tocreate"><span class="al">개시</span><span class="av">시작하기</span></button>' +
+        '<button data-act="tohowto"><span class="al">안내</span><span class="av">어떻게<br>하나요</span></button>' +
+        '<button data-act="togglebook" aria-expanded="' + (titleBook ? 'true' : 'false') + '">' +
+          '<span class="al">열람</span><span class="av">엔딩 도감' + (titleBook ? ' 닫기' : '') + '</span></button>' +
+      '</div>' +
+      '<div class="docline"><span>' + DOC_TEXT.recorded(seen) + '</span>' +
+        '<span>' + DOC_TEXT.best(sv.best) + '</span></div>' +
+      stampsHTML(seen) +
+      /* 7차 D-5. 기록을 파일로 옮긴다 (로그인·서버 저장은 하지 않는다) */
+      '<div class="filerow">' +
+        '<button class="linkbtn" data-act="saveout">기록 내보내기</button>' +
+        '<button class="linkbtn" data-act="savein">기록 불러오기</button>' +
+      '</div>' +
+      saveNoteHTML() +
       (tipsAllSeen() ? '<button class="linkbtn" data-act="tipreset">첫 판 도우미 안내 다시 켜기</button>' : '') +
     '</div>' +
     (titleBook ? endingBookHTML(sv, openCard) : '');
@@ -10615,7 +11446,12 @@ function optionEffects(o){
     var a = arrowFor(eff[k]);
     parts.push('<span class="er ' + a.cls + '">' + STAT_META[k].name + ' ' + a.sym + '</span>');
   });
-  /* 4) 6.1차 5. 겉으로 드러나지 않는 영향이 있으면 작은 표시를 붙인다.
+  /* 4) 7차 D-1. 자원을 내주고 확실한 것을 얻는 선택은 그 거래를 분명히 적는다.
+        (수치는 쓰지 않고 '무엇을 내주고 무엇을 얻는지'만) */
+  if(o.pushBody) parts.push('<span class="ec trade">체력을 써서 밀어붙임</span>');
+  if(o.noRoll && o.needFunds) parts.push('<span class="ec trade">돈으로 확실히 넘김</span>');
+  else if(o.noRoll) parts.push('<span class="ec trade">실패 없음</span>');
+  /* 5) 6.1차 5. 겉으로 드러나지 않는 영향이 있으면 작은 표시를 붙인다.
         무엇인지는 적지 않는다 — 다 보여 주면 최적 선택만 고르게 된다. */
   var hid = hiddenEffectOf(o);
   if(hid){
@@ -10679,7 +11515,11 @@ function sideNoteHTML(){
    수치는 쓰지 않는다. 열려 있는 선택지만 고를 수 있다.
    ══════════════════════════════════════════════════════════════════════════ */
 function lockReason(s, o){
-  if(!o || !o.needTier) return null;
+  if(!o) return null;
+  /* 7차 D-2. 돈이 많이 드는 길은 그만한 돈이 있어야 고를 수 있다.
+     빚을 내 유학을 보내는 집안은 드물다. 수치는 쓰지 않고 이유만 한 줄. */
+  if(o.needFunds && s.stats.funds < o.needFunds) return o.lockLine || '지금 형편으로는 감당할 수 없다.';
+  if(!o.needTier) return null;
   if(tierLevel(s) >= o.needTier) return null;
   return o.lockLine || CONFIG.tierGate.lines[o.needTier] || '아직 그럴 자리가 아니다.';
 }
@@ -10687,10 +11527,85 @@ function isLocked(s, o){ return !!lockReason(s, o); }
 
 /* ---------- 계획 화면 ---------- */
 var planScrollTarget = null;
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 A-4 — 턴 화면 위의 짧은 머리말
+   지금이 어느 시기인지 한 줄로 알려 준다. 같은 턴이라도 캐릭터가 처한 상황에
+   따라 문구가 달라진다. 수치나 등급은 쓰지 않고 상황만 말한다.
+   ══════════════════════════════════════════════════════════════════════════ */
+const TURN_HEADS = [
+  /* 턴 0 · 16~19세 */
+  function(s){
+    if(s.background === 'poor') return '열일곱. 집 사정을 알면서도, 하고 싶은 것이 있었다.';
+    return '열일곱. 아직 아무것도 정해지지 않았다.';
+  },
+  /* 턴 1 · 20~25세 */
+  function(s){
+    if(inBarracks(s)) return '스무 살 무렵. 한동안은 내 시간이 아니었다.';
+    if(s.background === 'poor') return '스무 살. 하고 싶은 것보다 벌이를 먼저 생각했다.';
+    return '스무 살. 아직 아무것도 정해지지 않았다.';
+  },
+  /* 턴 2 · 25~30세 */
+  function(s){
+    if(s.politicalCareer || s.party) return '사회에 첫발을 딛는다. 그 첫발이 정치 쪽이었다.';
+    return '사회에 첫발을 딛는다.';
+  },
+  /* 턴 3 · 30~35세 */
+  function(s){
+    if(s.party) return '당 안에서 이름이 오르내리기 시작한다.';
+    if(s.stats.fame >= 55) return '이름이 조금씩 알려지기 시작한다.';
+    return '아직은 아무도 이름을 모른다. 그래도 쌓이는 것이 있다.';
+  },
+  /* 턴 4 · 35~40세 */
+  function(s){
+    if(s.flags.everWonElection) return '이제는 지킬 자리가 있다.';
+    return '처음으로 이름을 걸고 표를 받으러 나선다.';
+  },
+  /* 턴 5~7 · 40세 이후 */
+  function(s){
+    if((s.flags.presTries || 0) > 0) return '한 번 겪어 본 길이다. 이번에는 다를까.';
+    if(tierLevel(s) >= 5) return '사람들이 그 이름을 대권과 함께 말하기 시작한다.';
+    return '가장 높은 자리를 넘볼 수 있는 시기가 왔다.';
+  }
+];
+function turnHeadHTML(s, t){
+  var fn = TURN_HEADS[Math.min(s.turnIndex, TURN_HEADS.length - 1)];
+  var line = fn ? fn(s) : '';
+  if(!line) return '';
+  return '<div class="turnhead"><span class="th">' + esc(val(t.ageText, s)) + '</span>' +
+    '<span class="tl">' + esc(line) + '</span></div>';
+}
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 B-1 — 한 화면에서 여러 개를 동시에 고르는 단계
+   ══════════════════════════════════════════════════════════════════════════ */
+function planMultiHTML(st){
+  var opts = st.options(S, S.planPicks) || [];
+  var chosen = (S.planMulti && S.planMulti[st.id]) || [];
+  var left = st.multi - chosen.length;
+  var note = st.note ? st.note(S, S.planPicks) : null;
+  return '<div class="planstep" id="ps-' + st.id + '">' +
+    '<div class="sl">' + esc(safe(st.title, S, 'title')) + '</div>' +
+    '<div class="sq">' + esc(safe(st.prompt, S, 'prompt')) + '</div>' +
+    (note ? '<div class="note">' + esc(note) + '</div>' : '') +
+    opts.map(function(o, k){
+      var on = chosen.indexOf(o.id) >= 0;
+      /* 다 골랐으면 고르지 않은 것은 눌러도 소용없게 흐려 둔다 */
+      var full = (left <= 0 && !on);
+      return '<button class="choice multi' + (on ? ' on' : '') + (full ? ' full' : '') + '" ' +
+        'data-act="pmulti" data-s="' + st.id + '" data-i="' + k + '" ' +
+        'aria-pressed="' + (on ? 'true' : 'false') + '">' +
+        '<div class="t">' + esc(safe(o.label, S, 'option')) +
+          (on ? '<span class="pickmark">고름</span>' : '') + '</div>' +
+        '<div class="h">' + optionEffects(o) + '</div></button>';
+    }).join('') +
+    '<button class="btn" data-act="pmdone" data-s="' + st.id + '"' +
+      (left > 0 ? ' disabled' : '') + '>' +
+      (left > 0 ? (left + '개 더 고르세요') : '이 둘로 3년을 보낸다') + '</button>' +
+    '</div>';
+}
 function viewPlanScreen(t){
   var list = planSteps();
   var next = nextPlanStep();
-  var h = '';
+  var h = turnHeadHTML(S, t);
   /* 시대 흐름 — 계획 화면 위에 뉴스 한 줄 (설계 B-2) */
   if(S.era) h += '<div class="newsbar"><span class="nb">뉴스</span>' + esc(S.era.news) + '</div>';
   h += '<div class="card">' +
@@ -10714,6 +11629,12 @@ function viewPlanScreen(t){
           '<span class="pv">' + esc(safe(picked.label, S, 'option')) + '</span>' +
           (S.planLocked ? '' : '<span class="pe">바꾸기</span>') +
         '</button></div>';
+    } else if(st === next && st.multi){
+      /* ── 7차 B-1 · B-2. 여러 개를 한 화면에서 동시에 고른다 ──
+         첫째·둘째로 나누지 않으므로 둘의 무게가 같다. 고른 것은 색만이 아니라
+         ☑ 표시와 '고름' 글자로도 읽힌다. */
+      h += planMultiHTML(st);
+      break;
     } else if(st === next){
       var note = st.note ? st.note(S, S.planPicks) : null;
       var opts = st.options(S, S.planPicks);
@@ -11047,6 +11968,8 @@ function viewPlay(){
         var tag = o.tag ? '<span class="tag ' + (o.tagKind === 'rec' ? 'rec' : '') + '">' + o.tag + '</span>' : '';
         return '<button class="choice" data-act="tlchoose" data-i="' + i + '">' +
           '<div class="t">' + tag + story(o.label) + '</div>' +
+          /* 7차 B-3. 길잡이 한 줄이 붙은 선택지는 그 줄을 함께 보여 준다 */
+          (o.showHint && o.hint ? '<div class="ohint">' + esc(val(o.hint, S)) + '</div>' : '') +
           '<div class="h">' + optionEffects(o) + '</div></button>';
       }).join('') + '</div>' + tlBelow();
   }
@@ -11108,7 +12031,9 @@ function viewPlay(){
   /* ---------- 위기 ---------- */
   else if(S.phase === 'crisis'){
     var cdef = CRISIS_EVENTS[S.crisisPath];
-    body = '<div class="card evcard crisiscard' + (S.shakeOnce ? ' shake' : '') + '">' +
+    /* 7차 A-7. 화면 위 가로줄 띠 — 평소 화면과 확실히 다르게 */
+    body = '<div class="ubar"><span>긴급</span></div>' +
+      '<div class="card evcard crisiscard' + (S.shakeOnce ? ' shake' : '') + '">' +
       '<div class="kicker warnkicker">⚠ 위기</div><h3>' + esc(cdef.title) + '</h3>' +
       '<p class="storyline">' + esc(cdef.text) + '</p>' +
       /* 6차 B-1. 같은 수를 또 쓸 수는 없다 */
@@ -11310,7 +12235,7 @@ function viewResult(){
       '<div class="kicker">후대의 인물 사전</div>' +
       '<div class="dname">' + esc(S.name) + '</div>' +
       '<div class="dtitle">' + esc(S.endingTitle) + '</div>' +
-      '<div class="dline">' + esc(CAREERS[S.career].name) + ' 출신 · ' +
+      '<div class="dline">' + esc(careerName(S)) + ' 출신 · ' +
         ((S.flags.presTries || 0) ? '대선 ' + S.flags.presTries + '회 도전' : '대선 미도전') + '</div>' +
       '<div class="divider"></div>' +
       '<p class="storyline">' + esc(art.verdict) + '</p>' +
@@ -11360,7 +12285,7 @@ function viewResultDetail(){
   var milName = { active:'현역 복무', active_late:'전성기에 현역 복무', officer:'장교 복무', jag:'군법무관', rnd:'전문연구요원', defer:'입대 연기' }[S.flags.mil] || '해당 없음';
   var party = S.party ? PARTIES.filter(function(p){ return p.id === S.party; })[0].name : '무소속';
   h += '<div class="card"><div class="kicker">정치 경력</div>' +
-    '<div class="rowline"><span class="k">진로</span><span class="v">' + CAREERS[S.career].name + '</span></div>' +
+    '<div class="rowline"><span class="k">진로</span><span class="v">' + esc(careerName(S)) + '</span></div>' +
     '<div class="rowline"><span class="k">정당</span><span class="v">' + party + '</span></div>' +
     '<div class="rowline"><span class="k">정치 씨앗</span><span class="v">' + seedName + '</span></div>' +
     '<div class="rowline"><span class="k">정치권 제안</span><span class="v">' + esc(S.flags.entryLabel || '없음') + '</span></div>' +
@@ -11387,8 +12312,37 @@ function viewResultDetail(){
 /* ---------- 그리기와 클릭 처리 ---------- */
 var screen = 'title';
 var openCard = null;      /* 엔딩 도감에서 펼쳐 둔 카드 */
+/* ══════════════════════════════════════════════════════════════════════════
+   7차 A-1 — 지금 화면이 어떤 옷을 입을지
+   여기서 돌려주는 이름이 <body data-skin> 에 붙고, 그 이름에 걸린 CSS 변수만
+   바뀐다. 카드·버튼을 그리는 규칙은 한 벌뿐이라 한 화면을 고쳐도 다른 화면은
+   그대로다. 어두운 옷은 선거·토론·위기·엔딩 넷뿐이다.
+   ══════════════════════════════════════════════════════════════════════════ */
+function skinOf(){
+  if(screen === 'title' || screen === 'howto' || screen === 'create') return 'home';
+  if(!S) return 'home';
+  if(S.screen === 'result') return 'hall';
+  if(screen === 'child') return 'note';
+  if(S.phase === 'crisis') return 'urgent';
+  if(S.phase === 'pres')
+    return (S.presSub === 'debate' || S.presSub === 'debateReact') ? 'studio' : 'broadcast';
+  if(S.phase === 'election') return 'broadcast';
+  if(S.turnIndex === 0) return 'note';        /* 고교는 공책 */
+  return 'career';                            /* 20세부터는 진로별 공간 */
+}
+function applySkin(app){
+  var sk = skinOf();
+  if(document.body.getAttribute('data-skin') === sk) return;
+  document.body.setAttribute('data-skin', sk);
+  /* 움직임 줄이기 설정이면 전환 효과 없이 바로 바뀐다 */
+  if(reducedMotion()) return;
+  app.classList.remove('skinswap');
+  void app.offsetWidth;          /* 같은 애니메이션을 다시 태우기 위한 되돌림 */
+  app.classList.add('skinswap');
+}
 function render(){
   var app = document.getElementById('app');
+  applySkin(app);
   /* 엔딩 화면만 짙은 남색 (5차 C-2) */
   document.body.classList.toggle('ending', !!(S && S.screen === 'result'));
   /* 아래 고정 탭은 판을 진행하는 동안에만 (6차 A-3) */
@@ -11423,8 +12377,8 @@ function render(){
 /* 0-1. 스크롤에 따른 자동 축소는 없앴다.
    그림 띠의 높이를 바꾸면 문서 전체 높이가 같이 바뀌고, 그 때문에 스크롤 위치가
    움직여 다시 높이가 바뀌는 되먹임이 생겨 화면이 떨렸다.
-   높이를 고정한 채 '그림만' 줄이면 아래 내용이 올라오지 않아 줄이는 뜻이 없으므로,
-   설계가 허용한 대로 접기 버튼만 남겼다. */
+   6.1차 4에서 접기 버튼도 없앴다 — 접으면 메뉴·체급 칩까지 함께 사라졌고,
+   큰 그림 화면(hud.big)과 기능이 겹쳤다. 지금 그림 띠의 높이는 고정이다. */
 
 document.getElementById('app').addEventListener('click', function(e){
   var btn = e.target.closest('[data-act]');
@@ -11441,8 +12395,8 @@ document.getElementById('app').addEventListener('click', function(e){
     createStep = 2; render();
   }
   else if(act === 'cback1'){ createStep = 1; render(); }
-  /* 6.1차 3 (보완). 고향까지 고르면 판이 시작된다. 어린 시절 탭으로 들어가고,
-     여기서부터는 이름·고향으로 되돌아갈 수 없다. */
+  /* 6.1차 3 (보완). 고향까지 고르면 판이 시작된다. 어린 시절 화면으로 들어가고,
+     여기서부터는 이름·고향으로 되돌아갈 수 없다. (어린 시절은 탭이 아니라 첫 화면이다) */
   else if(act === 'cstart'){
     newGame(draft.name, draft.gender, draft.region);
     createStep = 1;
@@ -11458,9 +12412,13 @@ document.getElementById('app').addEventListener('click', function(e){
   else if(act === 'hskip'){ screen = 'title'; render(); }
   else if(act === 'togglebook'){ titleBook = !titleBook; render(); }
   else if(act === 'tipreset'){ resetTips(); render(); }
+  /* 7차 D-5. 기록을 파일로 내보내고 불러오기 */
+  else if(act === 'saveout'){ saveNote = downloadSave(); render(); }
+  else if(act === 'savein'){ saveNote = null; openSaveFile(); }
+  else if(act === 'savenoteclose'){ saveNote = null; render(); }
   else if(act === 'tipclose'){ nextTip(S); render(); }
   else if(act === 'medalclose'){ S.medalToast = null; render(); }   /* 6차 E */
-  /* 6.1차 2. 해금 알림을 누르면 잠재력 탭으로 */
+  /* 6.1차 2. 해금 알림을 누르면 캐릭터 탭으로 */
   /* 6.1차 5. 숨은 영향 표시를 눌렀을 때 — 선택지는 고르지 않는다 */
   else if(act === 'sidenote'){ S.sideNote = btn.getAttribute('data-k') || 'quiet'; render(); }
   else if(act === 'sidenoteclose'){ S.sideNote = null; render(); }
@@ -11504,7 +12462,7 @@ document.getElementById('app').addEventListener('click', function(e){
   /* 6.1차 6-2. 여론 칸 / 알림 칸 */
   else if(act === 'fbox'){ S.feedBox = btn.getAttribute('data-v'); S.feedTab = 'new'; render(); }
   else if(act === 'feedread'){ markFeedRead(S.feedBox === 'alert' ? 'alert' : 'feed'); S.feedTab = 'kept'; render(); }
-  /* 고정 띠 접기와 메뉴 (5차 A-1 · A-3) */
+  /* 메뉴 (5차 A-3) */
   else if(act === 'menu'){ S.menuOpen = true; S.menuAsk = null; render(); }
   else if(act === 'menuclose'){ S.menuOpen = false; S.menuAsk = null; render(); }
   else if(act === 'askhome'){ S.menuAsk = 'home'; render(); }
@@ -11523,6 +12481,8 @@ document.getElementById('app').addEventListener('click', function(e){
   else if(act === 'sicon'){ S.iconNote = btn.getAttribute('data-d'); render(); }
   /* 계획 화면 */
   else if(act === 'ppick'){ pickPlanOption(btn.getAttribute('data-s'), parseInt(btn.getAttribute('data-i'), 10)); }
+  else if(act === 'pmulti'){ togglePlanMulti(btn.getAttribute('data-s'), parseInt(btn.getAttribute('data-i'), 10)); }
+  else if(act === 'pmdone'){ finishPlanMulti(btn.getAttribute('data-s')); }
   else if(act === 'reopen'){ reopenPlanStep(btn.getAttribute('data-s')); }
   else if(act === 'pconfirm'){ confirmPlan(); }
   /* 타임라인 */
